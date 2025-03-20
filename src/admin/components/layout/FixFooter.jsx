@@ -32,6 +32,7 @@ export default function FixFooter() {
   const [editContactContent, setEditContactContent] = useState("");
   const [editSocialIcon, setEditSocialIcon] = useState("");
   const [editSocialLink, setEditSocialLink] = useState("");
+
   const getFooter = async () => {
     const res = await getUiFooter();
     setName(res.companyInfo.name);
@@ -40,6 +41,7 @@ export default function FixFooter() {
     setSocialMedia(res.socialMedia);
     setContact(res.contactSection.items);
   };
+
   useEffect(() => {
     getFooter();
   }, []);
@@ -53,7 +55,6 @@ export default function FixFooter() {
         description,
         copyright_text,
       });
-      console.log(response);
       if (response.ok) {
         toast.success("Cập nhật thông tin chân trang thành công");
       } else {
@@ -64,7 +65,6 @@ export default function FixFooter() {
     }
   };
 
-  // thêm mạng xã hội
   const handleAddSocial = async (e) => {
     toast.dismiss();
     e.preventDefault();
@@ -87,7 +87,6 @@ export default function FixFooter() {
     }
   };
 
-  // xóa mạng xã hội
   const handleDelSocial = async (id) => {
     if (!confirm("Bạn có chắc chắn muốn xóa mạng xã hội này không?")) return;
     toast.dismiss();
@@ -100,7 +99,6 @@ export default function FixFooter() {
     }
   };
 
-  // thêm liên hệ
   const handleAddContact = async (e) => {
     toast.dismiss();
     e.preventDefault();
@@ -124,7 +122,6 @@ export default function FixFooter() {
     }
   };
 
-  // xóa liên hệ
   const handleDelContact = async (id) => {
     if (!confirm("Bạn có chắc chắn muốn xóa liên hệ này không?")) return;
     toast.dismiss();
@@ -138,7 +135,6 @@ export default function FixFooter() {
     }
   };
 
-  // sửa liên hệ
   const handleEditContact = async (id) => {
     toast.dismiss();
     setBtnEditContact(true);
@@ -164,7 +160,6 @@ export default function FixFooter() {
     setBtnEditContact(false);
   };
 
-  // sửa mạng xã hội
   const handleEditSocial = async (id) => {
     toast.dismiss();
     setBtnEditSocial(true);
@@ -188,201 +183,194 @@ export default function FixFooter() {
     }
     setBtnEditSocial(false);
   };
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="mx-auto space-y-8">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
-            Cập nhật thông tin chân trang
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className=" mx-auto space-y-10">
+        {/* Company Info Section */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-8 ">
+            Thông Tin Chân Trang
           </h2>
 
-          <form onSubmit={handleUpdateCompanyInfo} className="space-y-6">
-            <div>
-              <label className="text-gray-700 font-semibold block mb-2">
-                Tên công ty
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Nhập tên công ty"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent  outline-none"
-                required
-              />
+          <form onSubmit={handleUpdateCompanyInfo} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <label className="text-gray-700 font-medium block">
+                  Tên công ty
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 transition duration-200 outline-none"
+                  placeholder="Nhập tên công ty"
+                  required
+                />
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-gray-700 font-medium block">
+                  Bản quyền
+                </label>
+                <input
+                  type="text"
+                  value={copyright_text}
+                  onChange={(e) => setCopyrightText(e.target.value)}
+                  className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 transition duration-200 outline-none"
+                  placeholder="Nhập bản quyền"
+                  required
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="text-gray-700 font-semibold block mb-2">
-                Mô tả
-              </label>
+            <div className="space-y-4">
+              <label className="text-gray-700 font-medium block">Mô tả</label>
               <textarea
-                name="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
+                className="w-full px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 transition duration-200 outline-none"
                 placeholder="Nhập mô tả"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent  outline-none"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="text-gray-700 font-semibold block mb-2">
-                Bản quyền
-              </label>
-              <input
-                type="text"
-                name="copyright_text"
-                value={copyright_text}
-                onChange={(e) => setCopyrightText(e.target.value)}
-                placeholder="Nhập bản quyền"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent  outline-none"
                 required
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:opacity-90 transition duration-200 transform hover:scale-[1.02]"
             >
               Cập nhật thông tin
             </button>
           </form>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
-            Quản lý mạng xã hội
+        {/* Social Media Section */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-8">
+            Mạng Xã Hội
           </h2>
 
           <Link
             to="https://react-icons.github.io/react-icons/"
-            className="text-blue-600 hover:text-blue-800 block mb-4"
+            className="text-blue-600 hover:text-purple-600 transition-colors duration-200 block mb-6"
             target="_blank"
           >
             Xem danh sách icon tại đây
           </Link>
 
-          <div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <input
                 type="text"
-                placeholder="Nhập tên icon..."
+                placeholder="Tên icon..."
                 value={icon}
                 onChange={(e) => setIcon(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent  outline-none"
-                required
+                className="px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 transition duration-200 outline-none"
               />
               <input
                 type="text"
-                name="link"
+                placeholder="Đường dẫn..."
                 value={link}
-                placeholder="Nhập đường dẫn..."
                 onChange={(e) => setLink(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent  outline-none"
+                className="px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 transition duration-200 outline-none"
               />
               <button
                 onClick={handleAddSocial}
-                type="button"
-                className="bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-green-700 transition duration-200 outline-none "
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold hover:opacity-90 transition duration-200 transform hover:scale-[1.02]"
               >
                 Thêm mới
               </button>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <div className="overflow-x-auto rounded-xl border border-gray-100">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
                       Icon
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
                       Tên Icon
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
                       Đường dẫn
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
                       Thao tác
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {socialMedia.map((item, index) =>
                     editSocialId === item.id ? (
-                      <>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                      <tr key={index}>
+                        <td className="px-6 py-4">
                           <DynamicIcon iconName={item.icon} size={24} />
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4">
                           <input
-                            required
                             type="text"
                             value={editSocialIcon}
                             onChange={(e) => setEditSocialIcon(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                            className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                           />
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4">
                           <input
-                            required
                             type="text"
                             value={editSocialLink}
                             onChange={(e) => setEditSocialLink(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                            className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                           />
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex gap-2">
+                        <td className="px-6 py-4">
+                          <div className="flex gap-3">
                             <button
                               onClick={() => setEditSocialId(null)}
-                              className="p-2 text-red-600 hover:bg-red-100 rounded-full transition duration-200"
+                              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition duration-200"
                             >
                               <MdCancel size={24} />
                             </button>
                             <button
                               onClick={() => handleEditSocial(item.id)}
-                              className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition duration-200"
+                              className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition duration-200"
                             >
                               {btnEditSocial ? "..." : <MdSave size={24} />}
                             </button>
                           </div>
                         </td>
-                      </>
+                      </tr>
                     ) : (
                       <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4">
                           <DynamicIcon iconName={item.icon} size={24} />
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                          {item.icon}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 text-gray-700">{item.icon}</td>
+                        <td className="px-6 py-4">
                           <Link
                             to={item.url}
                             target="_blank"
-                            className="text-blue-600 hover:text-blue-800"
+                            className="text-blue-600 hover:text-purple-600 transition-colors duration-200"
                           >
                             {item.url}
                           </Link>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex gap-2">
+                        <td className="px-6 py-4">
+                          <div className="flex gap-3">
                             <button
                               onClick={() => handleDelSocial(item.id)}
-                              className="p-2 text-red-600 hover:bg-red-100 rounded-full transition duration-200"
+                              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition duration-200"
                             >
                               <MdDeleteForever size={24} />
                             </button>
                             <button
-                              className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition duration-200"
                               onClick={() => {
                                 setEditSocialId(item.id);
                                 setEditSocialIcon(item.icon);
                                 setEditSocialLink(item.url);
                               }}
+                              className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition duration-200"
                             >
                               <MdEdit size={24} />
                             </button>
@@ -397,106 +385,101 @@ export default function FixFooter() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
-            Thông tin liên hệ
+        {/* Contact Section */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-8">
+            Thông Tin Liên Hệ
           </h2>
 
           <Link
             to="https://react-icons.github.io/react-icons/"
-            className="text-blue-600 hover:text-blue-800 block mb-4"
+            className="text-blue-600 hover:text-purple-600 transition-colors duration-200 block mb-6"
             target="_blank"
           >
             Xem danh sách icon tại đây
           </Link>
 
-          <div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <input
-                required
                 type="text"
-                placeholder="Nhập tên icon..."
+                placeholder="Tên icon..."
                 value={iconContact}
                 onChange={(e) => setIconContact(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent  outline-none"
+                className="px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 transition duration-200 outline-none"
               />
               <input
-                required
                 type="text"
-                name="content"
-                placeholder="Nhập đường dẫn..."
+                placeholder="Nội dung..."
                 value={contentContact}
                 onChange={(e) => setContentContact(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent  outline-none"
+                className="px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 transition duration-200 outline-none"
               />
               <button
                 onClick={handleAddContact}
-                type="button"
-                className="bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 outline-none "
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold hover:opacity-90 transition duration-200 transform hover:scale-[1.02]"
               >
                 Thêm mới
               </button>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <div className="overflow-x-auto rounded-xl border border-gray-100">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
                       Icon
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
                       Tên Icon
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
                       Thông tin
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
                       Thao tác
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {contact.map((item, index) => (
                     <tr key={index}>
                       {editContactId === item.id ? (
                         <>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4">
                             <DynamicIcon iconName={item.icon} size={24} />
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4">
                             <input
-                              required
                               type="text"
                               value={editContactIcon}
                               onChange={(e) =>
                                 setEditContactIcon(e.target.value)
                               }
-                              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                              className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                             />
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4">
                             <input
-                              required
                               type="text"
                               value={editContactContent}
                               onChange={(e) =>
                                 setEditContactContent(e.target.value)
                               }
-                              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                              className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                             />
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex gap-2">
+                          <td className="px-6 py-4">
+                            <div className="flex gap-3">
                               <button
                                 onClick={() => setEditContactId(null)}
-                                className="p-2 text-red-600 hover:bg-red-100 rounded-full transition duration-200"
+                                className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition duration-200"
                               >
                                 <MdCancel size={24} />
                               </button>
                               <button
                                 onClick={() => handleEditContact(item.id)}
-                                className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition duration-200"
+                                className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition duration-200"
                               >
                                 {btnEditContact ? "..." : <MdSave size={24} />}
                               </button>
@@ -505,30 +488,28 @@ export default function FixFooter() {
                         </>
                       ) : (
                         <>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4">
                             <DynamicIcon iconName={item.icon} size={24} />
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-700">
+                          <td className="px-6 py-4 text-gray-700">
                             {item.icon}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            {item.content}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex gap-2">
+                          <td className="px-6 py-4">{item.content}</td>
+                          <td className="px-6 py-4">
+                            <div className="flex gap-3">
                               <button
                                 onClick={() => handleDelContact(item.id)}
-                                className="p-2 text-red-600 hover:bg-red-100 rounded-full transition duration-200"
+                                className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition duration-200"
                               >
                                 <MdDeleteForever size={24} />
                               </button>
                               <button
-                                className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition duration-200"
                                 onClick={() => {
                                   setEditContactId(item.id);
                                   setEditContactIcon(item.icon);
                                   setEditContactContent(item.content);
                                 }}
+                                className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition duration-200"
                               >
                                 <MdEdit size={24} />
                               </button>

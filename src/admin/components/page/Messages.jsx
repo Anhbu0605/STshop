@@ -59,7 +59,6 @@ const ChatMessages = () => {
       const data = await sendMessageAdmin(selectedUser, message, apiKey);
 
       setMessage("");
-      console.log(data);
     } catch (error) {
       console.error("Error sending message:", error);
     }

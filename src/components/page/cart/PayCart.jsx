@@ -140,7 +140,6 @@ const PayCart = ({ items }) => {
         note: deliveryNote,
         discount_code: checkout.discountCode,
       };
-      console.log("paymentData", paymentData);
 
       if (deliveryDetails.selectedPaymentMethod === "credit") {
         navigate(`/paysepay/ThanhToanDienTu?total=${total}`);

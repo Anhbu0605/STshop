@@ -320,15 +320,9 @@ const Nav = () => {
                 <div className="flex items-center space-x-1">
                   <span
                     onClick={handleLoginClick}
-                    className=" border-gray-300  cursor-pointer hover:text-blue-500"
+                    className=" text-black font-semibold cursor-pointer hover:text-blue-500 hover:underline "
                   >
                     Đăng nhập
-                  </span>
-                  <span
-                    onClick={handleRegisterClick}
-                    className="border-l-2 border-gray-300 px-1 cursor-pointer hover:text-blue-500"
-                  >
-                    Đăng ký
                   </span>
                 </div>
               )}

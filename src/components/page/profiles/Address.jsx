@@ -53,7 +53,6 @@ export default function Address() {
     // Thêm địa chỉ mới
     const data = await createAddress(profile.id, editInfo);
     toast.dismiss();
-    console.log(data);
 
     if (data) {
       if (data.ok) {
@@ -84,7 +83,6 @@ export default function Address() {
     if (confirm("bạn muốn xóa địa chỉ này ?")) {
       try {
         const response = await deleteAddress(id);
-        console.log(response);
 
         if (response.ok) {
           toast.success("Địa chỉ có thể xoá !");
@@ -101,7 +99,6 @@ export default function Address() {
   const handleSave = async () => {
     if (!validateFields()) return;
     toast.dismiss();
-    console.log(editInfo.id);
 
     const data = await updateAddress(editInfo.id, editInfo);
     if (data) {
@@ -118,7 +115,6 @@ export default function Address() {
     } else {
       toast.error("Đã xảy ra lỗi xảy ra !");
     }
-    console.log("data", data);
 
     setErrors({}); // Đặt lại lỗi sau khi thành công
   };

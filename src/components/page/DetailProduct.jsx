@@ -54,6 +54,7 @@ const DetailProduct = () => {
       size: selectedSize,
       color: selectedColor,
     });
+
     if (addItem.ok) {
       toast.success(addItem.message);
     } else {
@@ -63,7 +64,6 @@ const DetailProduct = () => {
 
   const handleAddFavorite = async () => {
     const data = await addFavorite(profile?.id, { product_id: product.id });
-    console.log(data);
     if (data.ok) {
       toast.success(data.message);
     } else {
@@ -222,15 +222,16 @@ const DetailProduct = () => {
                         <div className="ml-2">
                           {product?.type?.split(",").map((item) => (
                             <button
-                              className={`${
-                                selectedColor === item.trim()
-                                  ? `bg-${item.trim()}-100 text-${item.trim()}-500`
-                                  : `bg-${item.trim()}-500`
-                              } px-3 py-1 text-sm font-medium text-white rounded-lg mx-1 hover:bg-blue-300`}
+                              className="px-3 py-1 text-sm font-medium text-white rounded-lg mx-1 hover:opacity-80 w-6 h-6"
+                              style={{
+                                backgroundColor: item.trim(),
+                                border:
+                                  selectedColor === item.trim()
+                                    ? "2px solid #000"
+                                    : "none",
+                              }}
                               onClick={() => setSelectedColor(item.trim())}
-                            >
-                              {item}
-                            </button>
+                            ></button>
                           ))}
                         </div>
                       </div>

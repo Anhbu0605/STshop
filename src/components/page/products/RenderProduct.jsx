@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { FaStar, FaCartPlus } from "react-icons/fa";
-import { PiContactlessPaymentLight } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -133,18 +132,6 @@ const RenderProduct = ({ product, idProduct, data, isOpen }) => {
               <span>{Number(product.average_rating).toFixed(1)}</span>
             </div>
             <span>{product.sold} đã bán</span>
-          </div>
-
-          <div className="flex space-x-1 sm:space-x-2">
-            <button
-              onClick={addProductToCart}
-              disabled={!product.status}
-              className={`text-white p-1.5 sm:p-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg ${
-                product.status ? buttonStyles.cart : buttonStyles.disabled
-              }`}
-            >
-              <FaCartPlus size={16} />
-            </button>
           </div>
         </div>
       </div>

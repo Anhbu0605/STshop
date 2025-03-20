@@ -1,7 +1,7 @@
 export const deleteDiscountUser = async (id) => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_FASTFOOD_SERVER_API}/discount/user/delete/${id}`,
+      `${import.meta.env.VITE_STSHOP_SERVER_API}/discount/user/delete/${id}`,
       {
         method: "DELETE",
       }

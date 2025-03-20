@@ -83,22 +83,24 @@ const Products = () => {
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
-              {sortedProducts.length > 0 ? (
-                sortedProducts.map((product) => (
-                  <RenderProduct
-                    key={product.id}
-                    product={product}
-                    idProduct={product.id}
-                    data={setProductPay}
-                    isOpen={setIsOpen}
-                  />
-                ))
-              ) : (
-                <p className="text-center col-span-full">
-                  Không có sản phẩm nào hiện có...
-                </p>
-              )}
+            <div className=" min-h-screen">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
+                {sortedProducts.length > 0 ? (
+                  sortedProducts.map((product) => (
+                    <RenderProduct
+                      key={product.id}
+                      product={product}
+                      idProduct={product.id}
+                      data={setProductPay}
+                      isOpen={setIsOpen}
+                    />
+                  ))
+                ) : (
+                  <p className="text-center col-span-full">
+                    Không có sản phẩm nào hiện có...
+                  </p>
+                )}
+              </div>
             </div>
           </main>
 
