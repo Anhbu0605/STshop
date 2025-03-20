@@ -197,7 +197,7 @@ export default function Cart() {
       toast.error("Lỗi khi giảm số lượng!");
     }
   };
-  console.log(DataCart);
+
 
   const handleDelete = async (id) => {
     toast.dismiss();
