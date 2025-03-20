@@ -34,7 +34,7 @@ const Modal = ({ isOpen, onClose, editData, fetchData }) => {
       price,
       quantity,
       type,
-      size: size.split(","),
+      size,
       lock,
       description,
       discount,
