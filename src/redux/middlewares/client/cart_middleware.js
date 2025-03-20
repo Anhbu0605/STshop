@@ -12,6 +12,7 @@ export const getCartRender = (apiKey) => {
         }
       );
       const result = await response.json();
+      console.log("result", result);
 
       dispatch(getCartAction(result.data.cart_items));
       return result;

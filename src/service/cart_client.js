@@ -1,4 +1,4 @@
-export const addCart = async (data, apikey) => {
+export const addCart = async (apikey, data) => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_FASTFOOD_SERVER_API}/cart/create`,
@@ -8,9 +8,7 @@ export const addCart = async (data, apikey) => {
           "Content-Type": "application/json",
           "X-Api-Key": apikey,
         },
-        body: JSON.stringify({
-          product_id: data,
-        }),
+        body: JSON.stringify(data),
       }
     );
 

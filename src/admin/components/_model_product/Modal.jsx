@@ -19,10 +19,11 @@ const Modal = ({ isOpen, onClose, editData, fetchData }) => {
   const [imageUrl, setImageUrl] = useState(editData?.image_url || "");
   const [price, setPrice] = useState(editData?.price || "");
   const [quantity, setQuantity] = useState(editData?.quantity || "");
-  const [type, setType] = useState(editData?.type || "water");
+  const [type, setType] = useState(editData?.type || "red, blue, greens");
   const [lock, setLock] = useState(editData?.lock ?? false);
   const [description, setDescription] = useState(editData?.description || "");
   const [discount, setDiscount] = useState(editData?.discount || ""); // Discount field
+  const [size, setSize] = useState(editData?.size || "10, 20, 30");
   // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ const Modal = ({ isOpen, onClose, editData, fetchData }) => {
       price,
       quantity,
       type,
+      size: size.split(","),
       lock,
       description,
       discount,
@@ -147,17 +149,27 @@ const Modal = ({ isOpen, onClose, editData, fetchData }) => {
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Loại sản phẩm
+                Màu sắc (cách nhau bởi dấu ,)
               </label>
-              <select
+              <input
+                type="text"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={type}
+                placeholder="Nhập loại sản phẩm"
                 onChange={(e) => setType(e.target.value)}
-              >
-                <option value="water">Nước uống</option>
-                <option value="cake">Bánh</option>
-                <option value="food">Đồ ăn</option>
-              </select>
+                value={type}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Kích thước (cách nhau bởi dấu ,)
+              </label>
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="Nhập kích thước"
+                onChange={(e) => setSize(e.target.value)}
+                value={size}
+              />
             </div>
 
             <div className="space-y-2">
