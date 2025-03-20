@@ -1,7 +1,7 @@
 export const addCart = async (apikey, data) => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_FASTFOOD_SERVER_API}/cart/create`,
+      `${import.meta.env.VITE_STSHOP_SERVER_API}/cart/create`,
       {
         method: "POST",
         headers: {
@@ -23,7 +23,7 @@ export const addCart = async (apikey, data) => {
 // xóa sản phẩm trong giỏ hàng
 export const getCartDelete = async (id) => {
   const response = await fetch(
-    `${import.meta.env.VITE_FASTFOOD_SERVER_API}/cart/delete/${id}`,
+    `${import.meta.env.VITE_STSHOP_SERVER_API}/cart/delete/${id}`,
     {
       method: "DELETE",
       body: JSON.stringify({
@@ -37,7 +37,7 @@ export const getCartDelete = async (id) => {
 //xóa số lượng sản phẩm trong giỏ hàng
 export const getCartDeleteQuantity = async (id) => {
   const response = await fetch(
-    `${import.meta.env.VITE_FASTFOOD_SERVER_API}/cart/delete/${id}`,
+    `${import.meta.env.VITE_STSHOP_SERVER_API}/cart/delete/${id}`,
     {
       method: "DELETE",
       body: JSON.stringify({
@@ -51,7 +51,7 @@ export const getCartDeleteQuantity = async (id) => {
 export const addCartPay = async (data, id) => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_FASTFOOD_SERVER_API}/order/create`,
+      `${import.meta.env.VITE_STSHOP_SERVER_API}/order/create`,
       {
         method: "POST",
         headers: {
@@ -62,9 +62,6 @@ export const addCartPay = async (data, id) => {
     );
 
     const result = await response.json();
-    console.log(data);
-
-    console.log(result);
 
     return result;
   } catch (error) {

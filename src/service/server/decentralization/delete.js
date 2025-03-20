@@ -1,10 +1,7 @@
 export const decentralizationDelete = async (id) => {
-  console.log(id);
   try {
     const response = await fetch(
-      `${
-        import.meta.env.VITE_FASTFOOD_ADMIN_API
-      }/Decentralization/delete/${id}`,
+      `${import.meta.env.VITE_STSHOP_ADMIN_API}/Decentralization/delete/${id}`,
       {
         method: "DELETE",
         headers: {

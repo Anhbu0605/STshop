@@ -85,7 +85,6 @@ export default function Password() {
         current_password: currentPassword,
         new_password: newPassword,
       });
-      console.log(response);
       if (response?.ok) {
         if (!response?.success) {
           toast.error(response?.message);

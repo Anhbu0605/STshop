@@ -44,70 +44,94 @@ const CartItem = ({
   const discountAmount = (item.price * item.quantity * item.discount) / 100;
 
   return (
-    <li className="py-4 flex flex-row sm:items-center gap-4 border-b border-gray-200">
-      <div className="flex items-center gap-4">
-        {item.warning && (
-          <input
-            type="checkbox"
-            className="w-4 h-4"
-            checked={isSelected}
-            onChange={() => onSelect(item.id)}
+    <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 transition-all hover:shadow-lg">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-4">
+        <div className="flex items-center mb-4 sm:mb-0">
+          {item.warning && (
+            <input
+              type="checkbox"
+              className="w-5 h-5 mr-3 accent-blue-500"
+              checked={isSelected}
+              onChange={() => onSelect(item.id)}
+            />
+          )}
+          <img
+            src={item.image_url}
+            alt={item.product_name}
+            className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg"
           />
-        )}
-        {!item.warning && <div className="p-3"></div>}
-        <img
-          src={item.image_url}
-          alt={item.product_name}
-          className="w-20 h-20 object-cover rounded"
-        />
-      </div>
+        </div>
 
-      <div className="flex-1">
-        <h3 className="text-lg font-semibold">{item.product_name}</h3>
-        <p className="text-gray-600">
-          Đơn giá: {item.price.toLocaleString("vi-VN")}₫
-        </p>
-        {item.discount > 0 && (
-          <div>
-            <p className="text-red-500">Giảm giá: {item.discount}%</p>
-            <p className="text-green-600">
-              Tiết kiệm: {discountAmount.toLocaleString("vi-VN")}₫
+        <div className="flex-grow">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+            {item.product_name}
+          </h3>
+
+          <div className="flex flex-wrap gap-3 mb-3">
+            <div className="flex items-center">
+              <span className="text-gray-600 mr-2">Màu:</span>
+              <span
+                className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-gray-200"
+                style={{ backgroundColor: item.color.toLowerCase() }}
+              ></span>
+            </div>
+
+            <div className="flex items-center">
+              <span className="text-gray-600 mr-2">Kích cỡ:</span>
+              <span className="font-medium">{item.size}</span>
+            </div>
+          </div>
+
+          {item.discount > 0 && (
+            <div className="bg-red-50 rounded-lg p-2 mb-3 inline-block text-sm sm:text-base">
+              <p className="text-red-600 font-medium">Giảm: {item.discount}%</p>
+              <p className="text-green-600">
+                Tiết kiệm: {discountAmount.toLocaleString("vi-VN")}₫
+              </p>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-3 gap-3">
+            <p className="text-xl sm:text-2xl font-bold text-blue-600">
+              {itemPrice.toLocaleString("vi-VN")}₫
             </p>
-          </div>
-        )}
-        <p className="font-semibold text-blue-500 mt-1">
-          Thành tiền: {itemPrice.toLocaleString("vi-VN")}₫
-        </p>
-      </div>
 
-      <div className="flex items-center gap-4">
-        {item.warning ? (
-          <div className="flex items-center border rounded-md">
-            <button
-              className="p-2 hover:bg-gray-100"
-              onClick={() => onDeleteQuantity(item)}
-            >
-              <FaMinus className="w-4 h-4" />
-            </button>
-            <span className="px-4">{item.quantity}</span>
-            <button
-              className="p-2 hover:bg-gray-100"
-              onClick={() => onUpdateQuantity(item)}
-            >
-              <FaPlus className="w-4 h-4" />
-            </button>
+            <div className="flex items-center justify-between sm:space-x-4">
+              {item.warning ? (
+                <div className="flex items-center bg-gray-100 rounded-lg">
+                  <button
+                    className="p-2 hover:bg-gray-200 rounded-l-lg"
+                    onClick={() => onDeleteQuantity(item)}
+                  >
+                    <FaMinus className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </button>
+                  <span className="px-4 sm:px-6 font-medium">
+                    {item.quantity}
+                  </span>
+                  <button
+                    className="p-2 hover:bg-gray-200 rounded-r-lg"
+                    onClick={() => onUpdateQuantity(item)}
+                  >
+                    <FaPlus className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </button>
+                </div>
+              ) : (
+                <span className="text-red-500 font-bold text-sm sm:text-base">
+                  Hết hàng
+                </span>
+              )}
+
+              <button
+                className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                onClick={() => onDelete(item.id)}
+              >
+                <FaTrashAlt className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </div>
           </div>
-        ) : (
-          <div className="text-red-500 font-semibold p-2">Hết hàng</div>
-        )}
-        <button
-          className="text-red-500 hover:text-red-700 p-2"
-          onClick={() => onDelete(item.id)}
-        >
-          <FaTrashAlt className="w-5 h-5" />
-        </button>
+        </div>
       </div>
-    </li>
+    </div>
   );
 };
 
@@ -124,7 +148,6 @@ export default function Cart() {
       await dispatch(getCartRender(apiKey));
     } catch (error) {
       toast.error("Lỗi khi tải giỏ hàng!");
-    } finally {
     }
   };
 
@@ -174,7 +197,12 @@ export default function Cart() {
   const handleUpdateQuantity = async (item) => {
     toast.dismiss();
     try {
-      const updateItem = await addCart(item.product_id, apiKey);
+      const updateItem = await addCart(apiKey, {
+        id: item.product_id,
+        size: item.size,
+        color: item.color,
+      });
+
       if (updateItem.ok) {
         await fetchCart();
       } else {
@@ -197,7 +225,6 @@ export default function Cart() {
       toast.error("Lỗi khi giảm số lượng!");
     }
   };
-
 
   const handleDelete = async (id) => {
     toast.dismiss();
@@ -223,73 +250,74 @@ export default function Cart() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col mt-8">
-      <header className="fixed top-0 w-full z-50 bg-white">
+    <div className="min-h-screen bg-gray-100">
+      <header className="fixed top-0 w-full z-50 bg-white shadow-md">
         <Nav />
         <SupportChat />
       </header>
 
-      <main className="flex-grow pt-20 px-4 lg:px-8">
-        <div className="max-w-[150rem] mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="px-4 sm:px-6 py-4 bg-gray-100">
+      <main className="w-[95%] sm:w-[90%] mx-auto px-2 sm:px-4 pt-20 sm:pt-24 pb-12">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="p-4 sm:p-6 bg-gradient-to-r from-blue-500 to-blue-600">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl sm:text-2xl font-bold flex items-center text-gray-800">
-                <FaShoppingCart className="mr-2" /> Giỏ hàng của bạn
+              <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center">
+                <FaShoppingCart className="mr-2 sm:mr-3" /> Giỏ hàng của bạn
               </h2>
               {availableItems.length > 0 && (
-                <div className="flex items-center">
+                <div className="flex items-center bg-white/20 rounded-lg px-3 sm:px-4 py-1 sm:py-2">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 mr-2"
+                    className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 accent-blue-500"
                     checked={
                       selectedItems.length === availableItems.length &&
                       availableItems.length > 0
                     }
                     onChange={handleSelectAll}
                   />
-                  <span className="text-sm text-gray-600">Chọn tất cả</span>
+                  <span className="text-sm sm:text-base text-white font-medium">
+                    Chọn tất cả
+                  </span>
                 </div>
               )}
             </div>
           </div>
 
           {DataCart.length === 0 ? (
-            <div className="text-center text-gray-500 p-8">
-              <h2 className="text-2xl font-bold">Giỏ hàng trống</h2>
-
+            <div className="text-center py-12 sm:py-16">
               <img
-                className="w-1/3 mx-auto mt-10"
+                className="w-48 sm:w-64 mx-auto mb-6 sm:mb-8 opacity-50"
                 src="https://web.nvnstatic.net/tp/T0213/img/tmp/cart-empty.png?v=3"
-                alt="img-cart-empty"
+                alt="Giỏ hàng trống"
               />
-              <Link to="/food">
-                <span className="text-blue-500 mt-6 block hover:underline ">
-                  Tiếp tục mua sắm
-                </span>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-400 mb-4">
+                Giỏ hàng của bạn đang trống
+              </h2>
+              <Link
+                to="/products"
+                className="inline-block bg-blue-500 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg hover:bg-blue-600 transition-colors text-sm sm:text-base"
+              >
+                Tiếp tục mua sắm
               </Link>
             </div>
           ) : (
-            <div className="flex flex-col lg:flex-row lg:gap-8">
-              <div className="w-full lg:w-2/3 p-4">
-                <div className="max-h-[110vh] overflow-y-auto">
-                  <ul className="divide-y divide-gray-200">
-                    {DataCart.map((item) => (
-                      <CartItem
-                        key={item.id}
-                        item={item}
-                        onDelete={handleDelete}
-                        onUpdateQuantity={handleUpdateQuantity}
-                        onDeleteQuantity={handleDeleteQuantity}
-                        isSelected={selectedItems.includes(item.id)}
-                        onSelect={handleCheckboxChange}
-                      />
-                    ))}
-                  </ul>
+            <div className="flex flex-col lg:flex-row">
+              <div className="w-full lg:w-2/3 p-4 sm:p-6">
+                <div className="max-h-[60vh] sm:max-h-[70vh] overflow-y-auto pr-2 sm:pr-4">
+                  {DataCart.map((item) => (
+                    <CartItem
+                      key={item.id}
+                      item={item}
+                      onDelete={handleDelete}
+                      onUpdateQuantity={handleUpdateQuantity}
+                      onDeleteQuantity={handleDeleteQuantity}
+                      isSelected={selectedItems.includes(item.id)}
+                      onSelect={handleCheckboxChange}
+                    />
+                  ))}
                 </div>
               </div>
 
-              {/* // tính hóa đơn //  */}
-              <div className="w-full lg:w-1/3 p-4 bg-gray-50">
+              <div className="w-full lg:w-1/3 bg-gray-50 p-4 sm:p-6 lg:sticky lg:top-24">
                 {selectedItemsData.length > 0 && (
                   <PayCart items={selectedItemsData} totalPrice={totalPrice} />
                 )}
@@ -299,7 +327,7 @@ export default function Cart() {
         </div>
       </main>
 
-      <footer className="mt-8">
+      <footer>
         <PageFooter />
       </footer>
     </div>

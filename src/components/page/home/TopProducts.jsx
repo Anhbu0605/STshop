@@ -60,20 +60,6 @@ export default function TopProducts() {
     fetchData();
   }, [navigator]);
 
-  const addProductToCart = async (id) => {
-    toast.dismiss();
-    try {
-      const addItem = await addCart(id, apiKey);
-      if (addItem.ok) {
-        toast.success(addItem.message);
-      } else {
-        toast.error(addItem.message);
-      }
-    } catch (error) {
-      toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng");
-    }
-  };
-
   const generateSeoUrl = (name, id) => {
     return `${name
       .toLowerCase()
@@ -152,16 +138,6 @@ export default function TopProducts() {
                           đ
                         </p>
                       </div>
-                      <button
-                        onClick={() => addProductToCart(product.id)}
-                        className="bg-blue-600 text-white p-2.5 rounded-full hover:bg-blue-700 transition-all duration-300 transform hover:scale-110 relative group shadow-lg"
-                        aria-label="Thêm vào giỏ hàng"
-                      >
-                        <span className="absolute right-full mr-2 top-1/2 -translate-y-1/2 w-max opacity-0 group-hover:opacity-100 bg-blue-600 text-white text-sm px-3 py-1.5 rounded-lg transition-all duration-300">
-                          Thêm vào giỏ
-                        </span>
-                        <FaCartPlus size={20} />
-                      </button>
                     </div>
                     <div className="flex items-center justify-between text-sm text-gray-600">
                       <div className="flex items-center space-x-1">
