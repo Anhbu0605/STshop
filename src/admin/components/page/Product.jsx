@@ -134,22 +134,6 @@ const ProductManagement = () => {
                 </button>
                 <div className="flex items-center gap-2">
                   <label className="text-gray-500">Loại:</label>
-                  <select
-                    className="border rounded px-3 py-2 outline-none"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                  >
-                    {[
-                      { value: "", label: "Tất cả" },
-                      { value: "water", label: "Nước uống" },
-                      { value: "cake", label: "Bánh" },
-                      { value: "food", label: "Đồ ăn" },
-                    ].map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
                 </div>
                 <div className="flex items-center gap-2">
                   <label className="text-gray-500">Số lượng:</label>
@@ -178,7 +162,6 @@ const ProductManagement = () => {
                       <th className="p-2 text-left text-gray-500">Giảm giá</th>
                       <th className="p-2 text-right text-gray-500">Giá</th>
                       <th className="p-2 text-right text-gray-500">Số lượng</th>
-                      <th className="p-2 text-center text-gray-500">Loại</th>
                       <th className="p-2 text-center text-gray-500">
                         Trạng thái
                       </th>
@@ -214,13 +197,7 @@ const ProductManagement = () => {
                             {parseInt(product.price).toLocaleString()}đ
                           </td>
                           <td className="p-2 text-right">{product.quantity}</td>
-                          <td className="p-2 text-center w-[4rem]">
-                            {product.type
-                              .toLowerCase()
-                              .replace("cake", "Bánh")
-                              .replace("water", "Nước")
-                              .replace("food", "Đồ ăn")}
-                          </td>
+
                           <td className="p-2 text-center text-sm w-[7rem]">
                             <span
                               className={`px-2 py-1 rounded text-sm ${
@@ -241,7 +218,7 @@ const ProductManagement = () => {
                           <td className="p-2 text-center">
                             <div className="flex justify-center gap-2">
                               <button
-                                className="p-2 text-blue-600 hover:bg-blue-600 rounded"
+                                className="p-2 text-blue-600 hover:bg-blue-200 rounded"
                                 onClick={() => handleEditProduct(product)}
                               >
                                 <FaEdit />
