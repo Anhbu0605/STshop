@@ -134,7 +134,6 @@ const PayCart = ({ items }) => {
           size: item.size,
           color: item.color,
         })),
-
         total_price: total,
         subtotal: subtotal,
         payment_method: selectedPaymentMethod,
