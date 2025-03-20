@@ -60,16 +60,16 @@ export default function SupportChat() {
   }, [messages]);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 left-6 z-50">
       {isOpen ? (
         <div className="w-[350px] h-[500px] bg-white rounded-lg shadow-xl border border-gray-200">
-          <div className="flex flex-row items-center justify-between p-4 bg-[#b17741] text-white rounded-t-lg">
+          <div className="flex flex-row items-center justify-between p-4 bg-blue-500 text-white rounded-t-lg">
             <div className="flex items-center gap-2">
               <BsChatDots size={20} />
               <h3 className="font-semibold">Hỗ trợ trực tuyến</h3>
             </div>
             <button
-              className="p-1 hover:bg-[#b17741] rounded-full transition-colors"
+              className="p-1 hover:bg-blue-500 rounded-full transition-colors"
               onClick={() => setIsOpen((prev) => !prev)}
             >
               <BsX size={20} />
@@ -88,7 +88,7 @@ export default function SupportChat() {
                   className={`p-3 rounded-lg inline-block ${
                     msg.sender_type === "admin"
                       ? "bg-gray-100"
-                      : "bg-[#b17741] text-white"
+                      : "bg-blue-500 text-white"
                   }`}
                 >
                   {msg.content}
@@ -122,10 +122,10 @@ export default function SupportChat() {
                   }
                 }}
                 onChange={(e) => setInputMessage(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b17741]"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
-                className="p-2 bg-[#b17741] text-white rounded-md hover:bg-[#b17741] transition-colors"
+                className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-500 transition-colors"
                 onClick={handleSendMessage}
               >
                 <BsSend size={18} />
@@ -134,15 +134,14 @@ export default function SupportChat() {
           </div>
         </div>
       ) : (
-        <div className="relative">
-          <div className="animate-ping h-14 w-14 rounded-full bg-[#b17741] opacity-75 absolute"></div>
+        <div className="relative ">
+          <div className="animate-ping h-14 w-14 rounded-full bg-blue-500 opacity-75 absolute "></div>
           <button
             onClick={toggleChatWindow}
-            className="z-10 h-14 w-14 relative outline-none rounded-full bg-[#b17741] text-white shadow-lg hover:bg-[#b17741] transition-colors flex items-center justify-center"
+            className="z-10 h-14 w-14 relative outline-none rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-500 transition-colors flex items-center justify-center"
           >
             <BsChatDots size={24} />
           </button>
-          <p className="text-xs text-gray-500 pt-3">Chat hỗ trợ</p>
           {notification > 0 && (
             <span className="absolute -top-2 -right-2 z-20 items-center justify-center rounded-full text-sm font-bold text-white bg-red-500 w-6 h-6 flex">
               {notification}

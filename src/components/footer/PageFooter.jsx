@@ -46,7 +46,7 @@ export default function PageFooter() {
                 <a
                   key={social.id}
                   href={social.url}
-                  className="text-white hover:text-[#b17741] transition-colors duration-300"
+                  className="text-white hover:text-blue-500 transition-colors duration-300"
                 >
                   <DynamicIcon iconName={social.icon} className="h-8 w-8 " />
                 </a>
@@ -86,11 +86,11 @@ export default function PageFooter() {
               <input
                 type="email"
                 placeholder={newsletter.placeholder_text}
-                className="px-4 py-3 bg-white bg-opacity-20 rounded-lg placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-[#b17741]"
+                className="px-4 py-3 bg-white bg-opacity-20 rounded-lg placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-[#b17741] text-white rounded-lg font-semibold hover:bg-[#b17741] transition-colors duration-300"
+                className="px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors duration-300"
               >
                 {newsletter.button_text}
               </button>

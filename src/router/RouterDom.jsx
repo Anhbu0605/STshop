@@ -30,7 +30,7 @@ export default function RouterDom() {
         <Route path="/abouts" element={<About />} />
         <Route path="/carts" element={<Cart />} />
         <Route path="/discount" element={<Discount />} />
-        <Route path="/food" element={<Products />} />
+        <Route path="/products" element={<Products />} />
         <Route path="*" element={<Error />} />
         <Route path="/error" element={<ErrorSyteam />} />
         <Route path="/favorite" element={<Favorite />} />
