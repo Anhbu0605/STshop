@@ -22,15 +22,18 @@ import { addFavorite } from "../../service/favorite_api";
 const DetailProduct = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const params = useParams();
   const dispatch = useDispatch();
   const product = useSelector((state) => state.detail.detailProduct);
   const apiKey = useSelector((state) => state.login.apikey);
   const profile = useSelector((state) => state.profile.profile);
-  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     const fetchDetailProduct = async () => {
       const data = await dispatch(getDetailProduct(params.id, 1));
+
       toast.dismiss();
       if (!data.ok) {
         toast.error("Đã có lỗi xảy ra !");
@@ -40,8 +43,17 @@ const DetailProduct = () => {
   }, [params.id]);
 
   const addProductToCart = async () => {
+    if (!selectedSize || !selectedColor) {
+      toast.error("Vui lòng chọn kích thước và màu sắc!");
+      return;
+    }
+
     toast.dismiss();
-    const addItem = await addCart(product.id, apiKey);
+    const addItem = await addCart(apiKey, {
+      id: product.id,
+      size: selectedSize,
+      color: selectedColor,
+    });
     if (addItem.ok) {
       toast.success(addItem.message);
     } else {
@@ -189,20 +201,38 @@ const DetailProduct = () => {
                     </div>
                     <div className="flex flex-col gap-4">
                       <div className="inline-flex items-center rounded-fullpx-3 py-1 text-sm font-medium text-black">
-                        kích cỡ:
-                        {/* {product.type.map((item) => (
-                        <button className="bg-gray-200 px-3 py-1 text-sm font-medium text-white">
-                          {item}
-                        </button>
-                      ))} */}
+                        Kích cỡ:
+                        <div className="ml-2">
+                          {product?.size?.split(",").map((item) => (
+                            <button
+                              className={`${
+                                selectedSize === item
+                                  ? "bg-blue-500"
+                                  : "bg-gray-800"
+                              } px-3 py-1 text-sm font-medium text-white rounded-lg mx-1 hover:bg-blue-300`}
+                              onClick={() => setSelectedSize(item)}
+                            >
+                              {item}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                      <div className="inline-flex items-center rounded-full   py-1 text-sm font-medium text-black">
-                        Màu:
-                        {/* {product.type.map((item) => (
-                        <button className="bg-gray-200 px-3 py-1 text-sm font-medium text-white">
-                          {item}
-                        </button>
-                      ))} */}
+                      <div className="inline-flex items-center rounded-full py-1 text-sm font-medium text-black">
+                        Màu sắc:
+                        <div className="ml-2">
+                          {product?.type?.split(",").map((item) => (
+                            <button
+                              className={`${
+                                selectedColor === item.trim()
+                                  ? `bg-${item.trim()}-100 text-${item.trim()}-500`
+                                  : `bg-${item.trim()}-500`
+                              } px-3 py-1 text-sm font-medium text-white rounded-lg mx-1 hover:bg-blue-300`}
+                              onClick={() => setSelectedColor(item.trim())}
+                            >
+                              {item}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div className="space-y-6">
