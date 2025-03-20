@@ -21,7 +21,7 @@ const AddressModal = ({
             onClick={() => handleSelectAddress(address)}
             className={`w-full text-left p-4 rounded-lg border transition-colors ${
               selectedAddress?.id === address.id
-                ? "border-[#b17741] bg-[#b17741]"
+                ? "border-blue-500 bg-blue-500"
                 : "border-gray-200 hover:bg-gray-50"
             }`}
           >
@@ -32,7 +32,7 @@ const AddressModal = ({
                 <p className="text-gray-600">{address.address}</p>
               </div>
               {selectedAddress?.id === address.id && (
-                <span className="text-[#b17741]">✓</span>
+                <span className="text-blue-500">✓</span>
               )}
             </div>
           </button>

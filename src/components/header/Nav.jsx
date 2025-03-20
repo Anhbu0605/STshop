@@ -26,8 +26,8 @@ const NavLink = ({ to, children, onClick }) => {
       to={to}
       className={`transition duration-300 ${
         isActive
-          ? "text-[#b17741] font-semibold"
-          : "text-gray-600 hover:text-[#b17741]"
+          ? "text-blue-500 font-semibold"
+          : "text-gray-600 hover:text-blue-500"
       }`}
       onClick={onClick}
     >
@@ -68,23 +68,23 @@ const UserMenuItem = ({ icon, text, badge, onClick, path }) => {
 const MobileUserMenu = ({ user, onItemClick, DataCart, onClose }) => {
   const USER_MENU_ITEMS = [
     {
-      icon: <FaCartShopping className="text-[#b17741]" />,
+      icon: <FaCartShopping className="text-blue-500" />,
       text: "Giỏ hàng",
       badge: DataCart?.length,
       path: "/carts",
     },
     {
-      icon: <FaHistory className="text-[#b17741]" />,
+      icon: <FaHistory className="text-blue-500" />,
       text: "Lịch sử đơn hàng",
       path: "/history",
     },
     {
-      icon: <IoIosSettings className="text-[#b17741]" />,
+      icon: <IoIosSettings className="text-blue-500" />,
       text: "Cập nhật tài khoản",
       path: "/account",
     },
     {
-      icon: <CiHeart className="text-[#b17741]" />,
+      icon: <CiHeart className="text-blue-500" />,
       text: "Yêu thích",
       path: "/favorite",
     },
@@ -98,7 +98,7 @@ const MobileUserMenu = ({ user, onItemClick, DataCart, onClose }) => {
   return (
     <div className="bg-white px-4 py-2 border-t border-gray-200">
       <div className="flex items-center space-x-3 mb-4 p-2 bg-gray-50 rounded-lg">
-        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#b17741]">
+        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500">
           <img
             src={user?.avata || "/default-avatar.png"}
             alt={user?.username || "User avatar"}
@@ -171,7 +171,7 @@ const UserProfile = ({
       onClick={toggleDropdown}
       className="flex items-center space-x-3 cursor-pointer"
     >
-      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#b17741]">
+      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-500">
         <img
           src={user?.avata || "/default-avatar.png"}
           alt={user?.username || "User avatar"}
@@ -266,6 +266,11 @@ const Nav = () => {
     setIsMenuOpen(false);
   }, []);
 
+  const handleRegisterClick = useCallback(() => {
+    setisLoginOrRegister(false);
+    setIsMenuOpen(false);
+  }, []);
+
   const handleCloseLoginModal = useCallback(() => {
     setIsLoginModalOpen(false);
     setisLoginOrRegister(true);
@@ -283,7 +288,7 @@ const Nav = () => {
                 <img
                   className="h-full w-full object-cover"
                   src={Logo.image || "https://example.com/default-logo.png"}
-                  alt={Logo.title || "FastFood Logo"}
+                  alt={Logo.title || " Logo"}
                 />
               </div>
               <span className="text-2xl font-bold text-gray-800">
@@ -292,35 +297,42 @@ const Nav = () => {
             </Link>
           )}
 
-          <div className="hidden md:flex space-x-6">
-            {dataRender.menu
-              ?.filter((item) => item.id !== "5")
-              .map(({ id, title, url, className }) => (
-                <NavLink key={id} to={url || "/"}>
-                  <span className={className}>{title}</span>
-                </NavLink>
-              ))}
-          </div>
-
-          <div className="hidden md:block">
-            {status ? (
-              <UserProfile
-                user={profile}
-                dropdownOpen={dropdownOpen}
-                toggleDropdown={toggleDropdown}
-                onItemClick={handleItemClick}
-                DataCart={DataCart}
-              />
-            ) : (
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={handleLoginClick}
-                  className="bg-[#b17741] text-white px-6 py-2 rounded-full hover:bg-[#b17741] transition duration-300"
-                >
-                  Đăng nhập
-                </button>
-              </div>
-            )}
+          <div className="flex items-center space-x-6">
+            <div className="hidden md:flex space-x-6">
+              {dataRender.menu
+                ?.filter((item) => item.id !== "5")
+                .map(({ id, title, url, className }) => (
+                  <NavLink key={id} to={url || "/"}>
+                    <span className={className}>{title}</span>
+                  </NavLink>
+                ))}
+            </div>
+            <div className="hidden md:block">
+              {status ? (
+                <UserProfile
+                  user={profile}
+                  dropdownOpen={dropdownOpen}
+                  toggleDropdown={toggleDropdown}
+                  onItemClick={handleItemClick}
+                  DataCart={DataCart}
+                />
+              ) : (
+                <div className="flex items-center space-x-1">
+                  <span
+                    onClick={handleLoginClick}
+                    className=" border-gray-300  cursor-pointer hover:text-blue-500"
+                  >
+                    Đăng nhập
+                  </span>
+                  <span
+                    onClick={handleRegisterClick}
+                    className="border-l-2 border-gray-300 px-1 cursor-pointer hover:text-blue-500"
+                  >
+                    Đăng ký
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           <button
@@ -365,7 +377,7 @@ const Nav = () => {
                 <div className="mt-4 px-4">
                   <button
                     onClick={handleLoginClick}
-                    className="w-full bg-[#b17741] text-white py-3 rounded-lg hover:bg-[#b17741] transition duration-300"
+                    className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-500 transition duration-300"
                   >
                     Đăng nhập
                   </button>

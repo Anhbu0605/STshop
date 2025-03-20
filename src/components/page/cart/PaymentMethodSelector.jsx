@@ -18,7 +18,7 @@ export default function PaymentMethodSelector({ selectedMethod, onSelect }) {
               className={`flex flex-col items-center gap-2 p-3 rounded-lg border
           ${
             selectedMethod === method.id
-              ? "border-[#b17741] bg-[#b17741]"
+              ? "border-blue-500 bg-blue-500"
               : "border-gray-300 hover:bg-gray-50"
           }`}
             >

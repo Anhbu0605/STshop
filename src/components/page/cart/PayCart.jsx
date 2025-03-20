@@ -193,7 +193,7 @@ const PayCart = ({ items }) => {
             onChange={(e) =>
               updateDeliveryDetails("deliveryNote", e.target.value)
             }
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#b17741]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="3"
             placeholder="Nhập ghi chú cho người giao hàng..."
           />
@@ -201,7 +201,7 @@ const PayCart = ({ items }) => {
 
         <button
           onClick={() => toggleModal("discount", true)}
-          className="text-[#b17741] hover:text-[#b17741] text-sm font-medium"
+          className="text-blue-500 hover:text-blue-500 text-sm font-medium"
         >
           {checkout.discountCode
             ? `Mã đang dùng: ${checkout.discountCode}`
@@ -223,7 +223,7 @@ const PayCart = ({ items }) => {
 
         <button
           onClick={handleCheckout}
-          className="w-full py-3 bg-[#b17741] text-white font-semibold rounded-lg hover:bg-[#b17741] transition-colors disabled:bg-gray-400"
+          className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-500 transition-colors disabled:bg-gray-400"
           disabled={
             !deliveryDetails.selectedPaymentMethod ||
             !deliveryDetails.selectedAddress

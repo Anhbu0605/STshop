@@ -10,7 +10,7 @@ export default function ShippingAddress({ address, onChangeClick }) {
           <h4 className="font-medium">Địa chỉ giao hàng</h4>
           <button
             onClick={onChangeClick}
-            className="text-[#b17741] hover:text-[#b17741] text-sm font-medium"
+            className="text-blue-500 hover:text-blue-500 text-sm font-medium"
           >
             Thay đổi
           </button>

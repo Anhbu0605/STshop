@@ -17,7 +17,6 @@ import Loading from "../util/Loading";
 import PageFooter from "../footer/PageFooter";
 import { toast } from "react-toastify";
 import { addCart } from "../../service/cart_client";
-import ModelPayCart from "./cart/ModelPayCart";
 import { addFavorite } from "../../service/favorite_api";
 
 const DetailProduct = () => {
@@ -103,14 +102,7 @@ const DetailProduct = () => {
                   {/* Thông Tin Sản Phẩm */}
                   <div className="space-y-8">
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="inline-flex items-center rounded-full bg-[#b17741] px-3 py-1 text-sm font-medium text-white">
-                          {product.type
-                            .toUpperCase()
-                            .replace("FOOD", "Đồ ăn")
-                            .replace("CAKE", "Bánh")
-                            .replace("WATER", "Đồ uống")}
-                        </span>
+                      <div className="flex items-center justify-end">
                         <div className="flex gap-4">
                           <button
                             className="text-gray-400 hover:text-gray-500"
@@ -172,7 +164,7 @@ const DetailProduct = () => {
                     </p>
 
                     <div className="space-y-2">
-                      <div className="text-3xl font-bold text-[#b17741]">
+                      <div className="text-3xl font-bold text-blue-500">
                         {(
                           parseInt(product.price) *
                           (1 - product.discount / 100)
@@ -195,25 +187,30 @@ const DetailProduct = () => {
                         </div>
                       )}
                     </div>
-
+                    <div className="flex flex-col gap-4">
+                      <div className="inline-flex items-center rounded-fullpx-3 py-1 text-sm font-medium text-black">
+                        kích cỡ:
+                        {/* {product.type.map((item) => (
+                        <button className="bg-gray-200 px-3 py-1 text-sm font-medium text-white">
+                          {item}
+                        </button>
+                      ))} */}
+                      </div>
+                      <div className="inline-flex items-center rounded-full   py-1 text-sm font-medium text-black">
+                        Màu:
+                        {/* {product.type.map((item) => (
+                        <button className="bg-gray-200 px-3 py-1 text-sm font-medium text-white">
+                          {item}
+                        </button>
+                      ))} */}
+                      </div>
+                    </div>
                     <div className="space-y-6">
                       <div className="flex gap-4 mt-6">
                         <button
                           className={`w-full flex items-center justify-center py-3 rounded-lg transition ${
                             product.status
-                              ? "bg-red-600 hover:bg-red-700 text-white"
-                              : "bg-gray-300 cursor-not-allowed text-gray-500"
-                          }`}
-                          disabled={!product.status}
-                          onClick={() => setIsOpen(true)}
-                        >
-                          <AiOutlineShoppingCart className="mr-2" />
-                          Mua ngay
-                        </button>
-                        <button
-                          className={`w-full flex items-center justify-center py-3 rounded-lg transition ${
-                            product.status
-                              ? "bg-[#b17741] hover:bg-[#b17741] text-white"
+                              ? "bg-blue-500 hover:bg-blue-500 text-white"
                               : "bg-gray-300 cursor-not-allowed text-gray-500"
                           }`}
                           disabled={!product.status}
@@ -226,11 +223,6 @@ const DetailProduct = () => {
                     </div>
                   </div>
                 </div>
-                <ModelPayCart
-                  isOpen={isOpen}
-                  onClose={() => setIsOpen(false)}
-                  items={product}
-                />
               </div>
               <Evaluate data={product} setSelectedImage={setSelectedImage} />
             </div>

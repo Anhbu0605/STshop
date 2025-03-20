@@ -47,8 +47,8 @@ export default function SearchProduct() {
       <input
         type="search"
         id="searchInput"
-        placeholder="Nhập món ăn ..."
-        className="flex-grow m-0 p-3 text-sm sm:text-base border border-gray-300 rounded-lg outline-none shadow-md focus:ring-2 focus:ring-[#b17741] transition duration-300"
+        placeholder="Tìm kiếm..."
+        className="flex-grow m-0 p-3 pl-10 text-sm sm:text-base border border-gray-300 rounded-xl outline-none shadow-md focus:ring-2 focus:ring-blue-500 transition duration-300"
         value={searchTerm}
         onChange={handleSearch}
       />

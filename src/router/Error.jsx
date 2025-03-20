@@ -1,6 +1,6 @@
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-[#b17741] to-[#b17741]">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-blue-500">
       <main className="bg-white rounded-lg shadow-lg p-8 text-center">
         <h1 className="text-5xl font-extrabold text-red-600">404</h1>
         <h2 className="mt-2 text-2xl font-semibold text-gray-800">
@@ -11,7 +11,7 @@ export default function NotFound() {
         </p>
         <a
           href="/"
-          className="mt-6 inline-block px-4 py-2 text-white bg-[#b17741] rounded hover:bg-[#b17741] transition duration-300"
+          className="mt-6 inline-block px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-500 transition duration-300"
         >
           Go to Home
         </a>

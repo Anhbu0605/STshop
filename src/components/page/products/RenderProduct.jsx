@@ -63,7 +63,7 @@ const RenderProduct = ({ product, idProduct, data, isOpen }) => {
   // Shared button styles
   const buttonStyles = {
     disabled: "bg-gray-300 cursor-not-allowed",
-    cart: "bg-gradient-to-r from-[#b17741] to-[#b17741] hover:from-[#b17741] hover:to-[#b17741]",
+    cart: "bg-gradient-to-r from-blue-500 to-blue-500 hover:from-blue-500 hover:to-blue-500",
     buy: "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
   };
 
@@ -144,15 +144,6 @@ const RenderProduct = ({ product, idProduct, data, isOpen }) => {
               }`}
             >
               <FaCartPlus size={16} />
-            </button>
-            <button
-              disabled={!product.status}
-              onClick={buyNow}
-              className={`text-white p-1.5 sm:p-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg ${
-                product.status ? buttonStyles.buy : buttonStyles.disabled
-              }`}
-            >
-              <PiContactlessPaymentLight size={16} />
             </button>
           </div>
         </div>

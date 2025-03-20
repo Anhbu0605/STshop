@@ -181,7 +181,7 @@ export default function DiscountUser() {
             {coupons.map((coupon, index) => (
               <tr key={coupon.id}>
                 <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap cursor-pointer hover:text-[#b17741]">
+                <td className="px-6 py-4 whitespace-nowrap cursor-pointer hover:text-blue-500">
                   <span
                     onClick={() => {
                       toast.dismiss();
@@ -238,7 +238,7 @@ export default function DiscountUser() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex gap-3">
                     <button
-                      className="text-[#b17741] hover:text-[#b17741]"
+                      className="text-blue-500 hover:text-blue-500"
                       onClick={() => {
                         setEditData(coupon);
                         setIsOpen(true);

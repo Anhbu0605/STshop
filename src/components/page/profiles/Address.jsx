@@ -197,7 +197,7 @@ export default function Address() {
         {addresses.length < 3 && (
           <button
             onClick={handleAddClick}
-            className="px-4 sm:px-6 py-2 bg-[#b17741] text-white rounded-lg hover:bg-[#b17741] transition-colors duration-200"
+            className="px-4 sm:px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200"
           >
             Thêm
           </button>
