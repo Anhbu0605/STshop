@@ -81,7 +81,7 @@ export default function Login() {
         transition={{ duration: 1 }}
         className="absolute inset-0 bg-cover"
         style={{
-          backgroundImage: `url('https://res.cloudinary.com/dsm2g8fub/image/upload/v1741957329/adbbdbce-7602-418a-b7bb-cbf9b73e91bd.png')`,
+          backgroundImage: `url('https://res.cloudinary.com/djtooivoj/image/upload/v1742445684/slider2_a80mkq.jpg')`,
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-30"></div>
