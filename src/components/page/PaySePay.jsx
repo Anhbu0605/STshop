@@ -12,7 +12,6 @@ const PaySePay = () => {
   const dataPay = useSelector((state) => state.payqr.data);
   const [processedTransactions] = useState(new Set());
 
-  // Utility function to generate unique payment content
   const generateRandomContent = useCallback(() => {
     const prefix = "HD";
     const timestamp = new Date().getTime().toString().slice(-6);
@@ -22,11 +21,11 @@ const PaySePay = () => {
     return `${prefix}${timestamp}${random}`;
   }, []);
 
-  // Initialize payment data with persistent storage
   const [paymentData, setPaymentData] = useState(() => {
     const initialData = {
-      SO_TAI_KHOAN: "0862189003",
-      NGAN_HANG: "MB",
+      SO_TAI_KHOAN: "8840952752",
+      NGAN_HANG: "BIDV",
+      TEN_NGUOI_NHAN: "BUI THI TRANG ANH",
       SO_TIEN: dataPay.total_price,
       NOI_DUNG: generateRandomContent(),
     };
@@ -35,7 +34,6 @@ const PaySePay = () => {
     return initialData;
   });
 
-  // State for tracking payment status and SePayData
   const [paymentStatus, setPaymentStatus] = useState({
     status: "pending",
     message: "Đang chờ thanh toán",
@@ -47,14 +45,13 @@ const PaySePay = () => {
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [isOrderCreated, setIsOrderCreated] = useState(false);
 
-  // Copy to clipboard function with toast notification
   const handleCopyToClipboard = useCallback((text, label) => {
     toast.dismiss();
     navigator.clipboard.writeText(text);
     toast.success(`Đã sao chép ${label}`);
   }, []);
 
-  // Check payment status against received transactions
+  // Logic kiểm tra thanh toán và các useEffect giữ nguyên...
   const checkPaymentStatus = useCallback(async () => {
     toast.dismiss();
     if (!sePaysData || !paymentData || isOrderCreated) return false;
@@ -68,10 +65,8 @@ const PaySePay = () => {
 
     if (matchingPayment) {
       try {
-        // Đánh dấu giao dịch đang được xử lý
         processedTransactions.add(matchingPayment.referenceCode);
 
-        // Kiểm tra xem đơn hàng đã được tạo chưa
         if (!isOrderCreated) {
           const result = await addCartPay(dataPay);
           if (result.ok) {
@@ -83,7 +78,6 @@ const PaySePay = () => {
             setIsOrderCreated(true);
             setIsTimerActive(false);
 
-            // Lưu trạng thái thanh toán vào sessionStorage
             sessionStorage.setItem("paymentCompleted", "true");
             sessionStorage.setItem(
               "processedTransaction",
@@ -92,14 +86,12 @@ const PaySePay = () => {
 
             return true;
           } else {
-            // Xóa khỏi danh sách đã xử lý nếu thất bại
             processedTransactions.delete(matchingPayment.referenceCode);
             toast.error("Đã có lỗi xảy ra, liên hệ ngay với chúng tôi");
             return false;
           }
         }
       } catch (error) {
-        // Xóa khỏi danh sách đã xử lý nếu có lỗi
         processedTransactions.delete(matchingPayment.referenceCode);
         console.error("Error creating order:", error);
         toast.error("Đã có lỗi xảy ra, liên hệ ngay với chúng tôi");
@@ -109,7 +101,6 @@ const PaySePay = () => {
     return false;
   }, [sePaysData, paymentData, isOrderCreated, dataPay, processedTransactions]);
 
-  // Thêm useEffect để kiểm tra trạng thái thanh toán khi component mount
   useEffect(() => {
     const paymentCompleted = sessionStorage.getItem("paymentCompleted");
     const processedTransaction = sessionStorage.getItem("processedTransaction");
@@ -125,9 +116,8 @@ const PaySePay = () => {
     }
   }, []);
 
-  // Sửa lại fetchSePaysData để thêm xử lý lỗi tốt hơn
   const fetchSePaysData = useCallback(async () => {
-    if (isOrderCreated) return; // Không fetch nếu đã tạo đơn hàng
+    if (isOrderCreated) return;
 
     try {
       const data = await SePay();
@@ -142,9 +132,7 @@ const PaySePay = () => {
     }
   }, [checkPaymentStatus, isOrderCreated]);
 
-  // Timer and periodic checks
   useEffect(() => {
-    // Nếu timer không còn active thì không chạy
     if (!isTimerActive) return;
 
     const interval = setInterval(() => {
@@ -179,33 +167,6 @@ const PaySePay = () => {
     return () => clearInterval(interval);
   }, [fetchSePaysData, isTimerActive]);
 
-  // Render payment status badge
-  const renderPaymentStatusBadge = () => {
-    const statusColors = {
-      pending: "bg-yellow-100 text-yellow-800",
-      success: "bg-green-100 text-green-800",
-      failed: "bg-red-100 text-red-800",
-    };
-
-    const statusIcons = {
-      pending: <span className="animate-spin inline-block">⌛</span>,
-      success: <FaCheckCircle className="text-green-500" />,
-      failed: <FaExclamationCircle className="text-red-500" />,
-    };
-
-    return (
-      <div
-        className={`flex items-center justify-center p-2 rounded ${
-          statusColors[paymentStatus.status]
-        }`}
-      >
-        {statusIcons[paymentStatus.status]}
-        <span className="ml-2 font-semibold">{paymentStatus.message}</span>
-      </div>
-    );
-  };
-
-  // Sửa lại cleanup khi component unmount
   useEffect(() => {
     return () => {
       if (paymentStatus.status !== "success") {
@@ -216,115 +177,135 @@ const PaySePay = () => {
   }, [paymentStatus.status]);
 
   if (!dataPay) return <Loading />;
+
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <div className="bg-white shadow-2xl rounded-xl overflow-hidden">
-        {/* Payment Status Banner */}
-        <div className="p-4 bg-gray-100 text-center">
-          {renderPaymentStatusBadge()}
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200">
+      <div className="container mx-auto p-4">
+        <div className="max-w-5xl mx-auto">
+          {/* Header Section */}
+          <div className="text-center mb-8 pt-8">
+            <h1 className="text-4xl font-bold text-blue-600 mb-4">
+              Thanh Toán Đơn Hàng
+            </h1>
+            <div
+              className={`inline-block px-6 py-3 rounded-full ${
+                paymentStatus.status === "pending"
+                  ? "bg-blue-100 text-blue-700"
+                  : paymentStatus.status === "success"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {paymentStatus.status === "pending" && (
+                <span className="animate-pulse">⏳</span>
+              )}
+              {paymentStatus.status === "success" && (
+                <FaCheckCircle className="inline" />
+              )}
+              {paymentStatus.status === "failed" && (
+                <FaExclamationCircle className="inline" />
+              )}
+              <span className="ml-2 font-medium">{paymentStatus.message}</span>
+            </div>
+          </div>
 
-        {/* Main Content */}
-        <div className="p-6">
-          <h1 className="text-3xl font-bold text-center mb-6 text-blue-500">
-            Thanh Toán Điện Tử
-          </h1>
-
-          <div className="grid md:grid-cols-2 gap-6 items-start">
-            {/* QR Code Section */}
-            <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-4 text-center text-blue-500">
-                Cách 1: Quét Mã QR
-              </h2>
-              <div className="flex justify-center">
-                <div className="w-full max-w-xs">
+          {/* Main Content */}
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Left Panel - QR Code */}
+            <div className="flex-1 bg-white rounded-3xl shadow-xl p-8 transform hover:scale-102 transition-transform">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-blue-600 mb-6">
+                  Quét Mã QR
+                </h2>
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-2xl">
                   <img
                     src={`https://qr.sepay.vn/img?acc=${paymentData.SO_TAI_KHOAN}&bank=${paymentData.NGAN_HANG}&amount=${paymentData.SO_TIEN}&des=${paymentData.NOI_DUNG}`}
-                    alt="Mã QR Thanh Toán"
-                    className="w-full h-auto rounded-lg shadow-lg"
+                    alt="QR Code"
+                    className="mx-auto w-full max-w-xs rounded-2xl shadow-lg"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Manual Transfer Section */}
-            <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-4 text-center text-blue-500">
-                Cách 2: Chuyển Khoản Thủ Công
+            {/* Right Panel - Payment Details */}
+            <div className="flex-1 bg-white rounded-3xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">
+                Thông Tin Thanh Toán
               </h2>
-              <table className="w-full mb-4">
-                <tbody>
-                  {Object.entries({
-                    "Số Tài Khoản": "SO_TAI_KHOAN",
-                    "Ngân Hàng": "NGAN_HANG",
-                    "Số Tiền": "SO_TIEN",
-                    "Nội Dung": "NOI_DUNG",
-                  }).map(([label, key]) => (
-                    <tr key={key} className="border-b last:border-b-0">
-                      <td className="py-3 font-medium">{label}</td>
-                      <td className="py-3 flex items-center justify-between">
-                        {paymentData[key].toLocaleString("vi-VN")}
+
+              <div className="space-y-4">
+                {Object.entries({
+                  "👤 Người Nhận": "TEN_NGUOI_NHAN",
+                  "💳 Số Tài Khoản": "SO_TAI_KHOAN",
+                  "🏦 Ngân Hàng": "NGAN_HANG",
+                  "💰 Số Tiền": "SO_TIEN",
+                  "📝 Nội Dung": "NOI_DUNG",
+                }).map(([label, key]) => (
+                  <div
+                    key={key}
+                    className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-2xl"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700">{label}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="font-semibold text-blue-600">
+                          {paymentData[key]}
+                        </span>
                         <button
                           onClick={() =>
-                            handleCopyToClipboard(
-                              paymentData[key],
-                              label.toLowerCase()
-                            )
+                            handleCopyToClipboard(paymentData[key], label)
                           }
-                          className="ml-2 text-blue-500 hover:text-blue-500 transition"
-                          aria-label={`Sao chép ${label}`}
+                          className="p-2 hover:bg-blue-100 rounded-full transition-colors"
                         >
-                          <FaCopy />
+                          <FaCopy className="text-blue-500" />
                         </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              <div className="text-center">
-                <p className="text-yellow-600 text-sm mb-4">
-                  Lưu ý: Nội dung chuyển khoản phải đúng như nội dung đã nhập,
-                  thoát trang , load lại sẽ hủy thanh toán
-                </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
 
                 {paymentStatus.status !== "success" && (
-                  <div className="flex justify-between items-center bg-gray-200 p-3 rounded-lg mb-4">
-                    <span className="font-semibold">Thời Gian Còn Lại:</span>
-                    <span className="text-red-600 font-bold">
-                      {remainingTime}
-                    </span>
+                  <div className="bg-blue-100 p-4 rounded-2xl mt-6">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-700">
+                        ⏰ Thời gian còn lại
+                      </span>
+                      <span className="text-2xl font-bold text-blue-600">
+                        {remainingTime}
+                      </span>
+                    </div>
                   </div>
                 )}
 
-                <button
-                  className={`w-full ${
-                    paymentStatus.status === "success"
-                      ? "bg-green-500"
-                      : "bg-red-500"
-                  } text-white px-4 py-2 rounded-md hover:bg-${
-                    paymentStatus.status === "success" ? "green-700" : "red-700"
-                  } transition`}
-                  onClick={() => {
-                    setPaymentStatus({
-                      status: "failed",
-                      message: "Đã hủy thanh toán",
-                    });
-                    setIsTimerActive(false);
-                  }}
-                >
-                  {paymentStatus.status === "success"
-                    ? "Quay Lại"
-                    : "Hủy Thanh Toán"}
-                </button>
-                {paymentStatus.status === "success" && (
-                  <Link
-                    to="/history"
-                    className="text-blue-500 hover:text-blue-500 transition underline mt-2"
+                <div className="mt-8">
+                  <button
+                    onClick={() => {
+                      setPaymentStatus({
+                        status: "failed",
+                        message: "Đã hủy thanh toán",
+                      });
+                      setIsTimerActive(false);
+                    }}
+                    className={`w-full py-4 rounded-2xl font-bold text-white transition-all ${
+                      paymentStatus.status === "success"
+                        ? "bg-green-500 hover:bg-green-600"
+                        : "bg-blue-500 hover:bg-blue-600"
+                    }`}
                   >
-                    Theo dõi đơn hàng
-                  </Link>
-                )}
+                    {paymentStatus.status === "success"
+                      ? "Hoàn Tất"
+                      : "Hủy Thanh Toán"}
+                  </button>
+
+                  {paymentStatus.status === "success" && (
+                    <Link
+                      to="/history"
+                      className="block text-center mt-4 text-blue-600 hover:text-blue-700 font-medium"
+                    >
+                      Xem lịch sử đơn hàng →
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
           </div>
