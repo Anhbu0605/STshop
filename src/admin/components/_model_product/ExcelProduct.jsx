@@ -12,11 +12,7 @@ const ExportToExcel = ({ data, fileName = "DanhSachSanPham" }) => {
       Giá: product.price,
       "Giảm giá": `${product.discount}%`,
       "Số lượng": product.quantity,
-      Loại: product.type
-        .toLowerCase()
-        .replace("cake", "Bánh")
-        .replace("water", "Nước")
-        .replace("food", "Đồ ăn"),
+      Loại: product.type.toLowerCase(),
       "Trạng thái": product.lock
         ? "Đang dừng"
         : product.status
