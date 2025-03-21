@@ -7,25 +7,17 @@ import { DynamicIcon } from "../util/iconLibraries";
 import SupportChat from "../messger/SupportChat";
 
 const FeatureCard = ({ iconName, title, description }) => (
-  <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
-    <DynamicIcon
-      iconName={iconName}
-      size={50}
-      className="text-blue-500 mb-2 sm:mb-4"
-    />
-    <h3 className="text-lg sm:text-xl font-semibold mb-2">{title}</h3>
-    <p className="text-sm sm:text-base text-gray-600">{description}</p>
+  <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
+    <DynamicIcon iconName={iconName} size={50} className="text-blue-500 mb-4" />
+    <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
+    <p className="text-gray-600">{description}</p>
   </div>
 );
 
 const StandardItem = ({ text, iconName = "TiTick" }) => (
-  <li className="flex items-center mb-2">
-    <DynamicIcon
-      iconName={iconName}
-      size={20}
-      className="text-green-500 mr-2"
-    />
-    <span>{text}</span>
+  <li className="flex items-center space-x-3 mb-3">
+    <DynamicIcon iconName={iconName} size={20} className="text-blue-500" />
+    <span className="text-gray-700">{text}</span>
   </li>
 );
 
@@ -42,7 +34,6 @@ export default function About() {
     const fetchData = async () => {
       try {
         const response = await getUiAbout();
-
         setSession(response.session);
         setInfo(response.Info);
       } catch (error) {
@@ -52,7 +43,6 @@ export default function About() {
     fetchData();
   }, []);
 
-  // Get header and story info from info array
   const headerInfo = info[0] || {
     name: "",
     description: "",
@@ -61,11 +51,9 @@ export default function About() {
   };
   const storyInfo = info[1] || { name: "", description: "", color: "", id: "" };
 
-  // Filter session data for features and standards
   const features = session.filter((item) => item.description && item.id <= 4);
   const standardsTitle =
-    session.find((item) => item.id === "5")?.name ||
-    "Tiêu Chuẩn Đồ Ăn Nhanh Của Chúng Tôi";
+    session.find((item) => item.id === "5")?.name || "Tiêu Chúng Tôi";
   const standards = session.filter((item) => item.id > 5 && item.name.trim());
 
   return (
@@ -74,27 +62,27 @@ export default function About() {
         <Nav />
         <SupportChat />
       </header>
-      <div className="pt-[6rem] bg-gray-100 min-h-screen">
-        <header className="bg-blue-500 text-white py-8 sm:py-16">
-          <div className="container mx-auto text-center px-4">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-2 sm:mb-4">
+      <div className="bg-gray-100 min-h-screen py-[6rem]">
+        <div className="container mx-auto xl:w-[85%] px-4">
+          <div className="p-8 mb-8">
+            <h1 className="text-5xl font-bold text-center text-blue-500 mb-4">
               {headerInfo.name}
             </h1>
-            <p className="text-lg sm:text-xl">{headerInfo.description}</p>
+            <p className="text-center text-gray-600 text-lg">
+              {headerInfo.description}
+            </p>
           </div>
-        </header>
 
-        <main className="container mx-auto py-8 sm:py-16 px-4">
-          <section className="mb-8 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-8">
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <h2 className="text-2xl font-semibold mb-6 text-blue-500 border-b-2 border-blue-200 pb-2">
               {storyInfo.name}
             </h2>
-            <p className="text-base sm:text-lg text-gray-700 max-w-3xl mx-auto text-center">
+            <p className="text-gray-700 leading-relaxed">
               {storyInfo.description}
             </p>
-          </section>
+          </div>
 
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 mb-8 sm:mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {features.map((feature) => (
               <FeatureCard
                 key={feature.id}
@@ -103,13 +91,13 @@ export default function About() {
                 description={feature.description}
               />
             ))}
-          </section>
+          </div>
 
-          <section className="bg-white p-4 sm:p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-8">
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <h2 className="text-2xl font-semibold mb-6 text-blue-500 border-b-2 border-blue-200 pb-2">
               {standardsTitle}
             </h2>
-            <ul className="text-sm sm:text-base text-gray-700 max-w-2xl mx-auto">
+            <ul className="space-y-2">
               {standards.map((standard) => (
                 <StandardItem
                   key={standard.id}
@@ -118,13 +106,10 @@ export default function About() {
                 />
               ))}
             </ul>
-          </section>
-        </main>
-
-        <footer>
-          <PageFooter />
-        </footer>
+          </div>
+        </div>
       </div>
+      <PageFooter />
     </>
   );
 }

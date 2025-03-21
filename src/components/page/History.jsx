@@ -19,6 +19,8 @@ export default function History() {
         const result = await getHistory(apiKey);
         if (result.success) {
           setOrders(result.data);
+
+          console.log(result);
         }
       } catch (error) {
         console.error("Error fetching orders:", error);
