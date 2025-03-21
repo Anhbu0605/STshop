@@ -256,13 +256,13 @@ export default function About() {
       <div className="bg-white/80 backdrop-blur-lg p-6 md:p-10 rounded-[2rem] shadow-xl hover:shadow-2xl transition-all duration-300 space-y-4">
         <section className="space-y-4">
           <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
-            Đa dạng món ăn
+            Đa dạng sản phẩm
           </h1>
           <div className="flex items-center gap-4">
             {" "}
             <input
               type="text"
-              placeholder="Thêm Đa Dạng Món Ăn ...."
+              placeholder="Thêm Đa Dạng sản phẩm ...."
               className="border outline-none w-full rounded-lg p-2"
               onChange={(e) => setAddInput(e.target.value)}
               value={addInput}
