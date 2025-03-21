@@ -30,7 +30,7 @@ export default function FixStep({ setCloseModal, setEditingStep, fcSteps }) {
   return (
     <div className="bg-white/80 backdrop-blur-lg p-6 md:p-10 rounded-[2rem] shadow-xl hover:shadow-2xl transition-all duration-300">
       <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
-        Các bước đặt món
+        Các bước đặt hàng
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

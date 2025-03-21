@@ -28,7 +28,7 @@ export default function Model_Cancel({ isOpen, onClose, order_id }) {
             <option value="">-- Chọn lý do --</option>
             <option value="wrong_address">Địa chỉ không chính xác</option>
             <option value="change_mind">Đổi ý không muốn mua nữa</option>
-            <option value="wrong_item">Đặt nhầm món</option>
+            <option value="wrong_item">Đặt nhầm hàng</option>
             <option value="other">Lý do khác</option>
           </select>
         </div>

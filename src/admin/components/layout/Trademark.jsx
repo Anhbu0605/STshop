@@ -47,7 +47,7 @@ export default function Trademark() {
     <div className="space-y-6 p-4 md:p-8 bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col items-center">
       <div className="bg-white/80 backdrop-blur-lg p-6 md:p-10 rounded-[2rem] shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col items-center w-full max-w-xl">
         <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6 md:mb-8">
-          Logo Thương Hiệu
+          Hình Ảnh Thương Hiệu
         </h3>
         <div className="flex flex-col gap-4 md:gap-6 items-center w-full">
           <div className="relative group">
