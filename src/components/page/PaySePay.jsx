@@ -276,9 +276,9 @@ const PaySePay = () => {
                     </div>
                   </div>
                 )}
-
-                <div className="mt-8">
-                  <button
+                {paymentStatus.status !== "success" && (
+                  <Link
+                    to="/carts"
                     onClick={() => {
                       setPaymentStatus({
                         status: "failed",
@@ -286,17 +286,12 @@ const PaySePay = () => {
                       });
                       setIsTimerActive(false);
                     }}
-                    className={`w-full py-4 rounded-2xl font-bold text-white transition-all ${
-                      paymentStatus.status === "success"
-                        ? "bg-green-500 hover:bg-green-600"
-                        : "bg-blue-500 hover:bg-blue-600"
-                    }`}
+                    className={`w-full py-4 rounded-2xl font-bold text-white transition-all bg-red-500 hover:bg-red-600`}
                   >
-                    {paymentStatus.status === "success"
-                      ? "Hoàn Tất"
-                      : "Hủy Thanh Toán"}
-                  </button>
-
+                    Hủy Thanh Toán
+                  </Link>
+                )}
+                <div className="mt-8">
                   {paymentStatus.status === "success" && (
                     <Link
                       to="/history"

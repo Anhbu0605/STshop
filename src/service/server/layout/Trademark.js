@@ -32,8 +32,6 @@ export const setHomeHeader = async (data) => {
   return _data;
 };
 
-// sửa các bước đặt món
-
 export const setHomeStep = async (data, id) => {
   const response = await fetch(
     `${import.meta.env.VITE_STSHOP_RENDER_API}/home/body/${id}`,
