@@ -23,7 +23,7 @@ const PaySePay = () => {
 
   const [paymentData, setPaymentData] = useState(() => {
     const initialData = {
-      SO_TAI_KHOAN: "8840952752",
+      SO_TAI_KHOAN: "96247AB123456789",
       NGAN_HANG: "BIDV",
       TEN_NGUOI_NHAN: "BUI THI TRANG ANH",
       SO_TIEN: dataPay.total_price,
@@ -276,21 +276,23 @@ const PaySePay = () => {
                     </div>
                   </div>
                 )}
-                {paymentStatus.status !== "success" && (
-                  <Link
-                    to="/carts"
-                    onClick={() => {
-                      setPaymentStatus({
-                        status: "failed",
-                        message: "Đã hủy thanh toán",
-                      });
-                      setIsTimerActive(false);
-                    }}
-                    className={`w-full py-4 rounded-2xl font-bold text-white transition-all bg-red-500 hover:bg-red-600`}
-                  >
-                    Hủy Thanh Toán
-                  </Link>
-                )}
+                <div className="mt-8 flex justify-center items-center text-center">
+                  {paymentStatus.status !== "success" && (
+                    <Link
+                      to="/carts"
+                      onClick={() => {
+                        setPaymentStatus({
+                          status: "failed",
+                          message: "Đã hủy thanh toán",
+                        });
+                        setIsTimerActive(false);
+                      }}
+                      className={`w-full py-4 rounded-2xl font-bold text-white transition-all bg-red-500 hover:bg-red-600`}
+                    >
+                      Hủy Thanh Toán
+                    </Link>
+                  )}
+                </div>
                 <div className="mt-8">
                   {paymentStatus.status === "success" && (
                     <Link
