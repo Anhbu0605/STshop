@@ -16,6 +16,7 @@ import { getUiNavbar } from "../../service/ui/ui_navbav";
 import ModalForgot from "./ModalForgot";
 import { FaHeart, FaHistory } from "react-icons/fa";
 import { CiHeart } from "react-icons/ci";
+import { useNavStore } from "../../zustand/nav";
 
 const NavLink = ({ to, children, onClick }) => {
   const location = useLocation();
@@ -204,7 +205,7 @@ const Nav = () => {
   const apiKey = useSelector((state) => state.login.apikey);
   const profile = useSelector((state) => state.profile.profile);
   const DataCart = useSelector((state) => state.cart.cartItems);
-
+  const { setValue } = useNavStore();
   useEffect(() => {
     async function checkApiKey() {
       const data = await dispatch(getProfile(apiKey));
@@ -222,8 +223,12 @@ const Nav = () => {
     async function fetchData() {
       try {
         const data = await getUiNavbar();
+
         if (data.ok) {
           setDataRender(data);
+
+          //lưu thông tin hinh ảnh
+          setValue(data.menu[0]?.image || " ");
         } else {
           throw new Error(data.message);
         }
@@ -284,10 +289,10 @@ const Nav = () => {
         <div className="flex w-11/12 m-auto items-center justify-between max-lg:w-full">
           {Logo && (
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-12 h-12 rounded-full overflow-hidden">
+              <div className="w-[4rem] h-[4rem] rounded-full overflow-hidden">
                 <img
                   className="h-full w-full object-cover"
-                  src={Logo.image || "https://example.com/default-logo.png"}
+                  src={Logo.image}
                   alt={Logo.title || " Logo"}
                 />
               </div>

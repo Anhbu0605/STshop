@@ -14,12 +14,15 @@ const Dashboard = () => {
   useEffect(() => {
     const getDashboardData = async () => {
       const { data } = await getDashboard();
+      console.log(getDashboardData, "dashboardData");
+      
       setDashboardData(data);
     };
     getDashboardData();
   }, []);
   return (
-    <div>
+    <>
+        <div>
       <main>
         <div className="max-w-7xl mx-auto ">
           <div className="flex justify-between items-center mb-6">
@@ -70,6 +73,7 @@ const Dashboard = () => {
         </div>
       </main>
     </div>
+    </>
   );
 };
 
