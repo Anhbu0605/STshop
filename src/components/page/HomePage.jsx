@@ -9,11 +9,14 @@ import OrderingSteps from "./home/OrderingSteps";
 import { useNavigate } from "react-router";
 import Loading from "../util/Loading";
 import SupportChat from "../messger/SupportChat";
+import { useNavStore } from "../../zustand/nav";
 
 export default function Home() {
   const [header, setHeader] = useState({});
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
+  const { value } = useNavStore();
+
+  console.log(value, "value");
 
   useEffect(() => {
     async function fetchData() {
@@ -58,7 +61,14 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                {header.websiteInfo?.site_name}
+                {/* {header.websiteInfo?.site_name} */}
+                <div className="w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 relative overflow-hidden rounded-full shadow-lg border-4 border-white">
+                  <img
+                    src={value}
+                    alt="logo"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </motion.h1>
 
               <motion.p
