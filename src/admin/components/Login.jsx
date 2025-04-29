@@ -102,7 +102,7 @@ export default function Login() {
           >
             <img
               className="w-full h-full object-cover rounded-full"
-              src="https://res.cloudinary.com/djtooivoj/image/upload/v1742402105/Logo2_xbhxcy.png"
+              src="https://res.cloudinary.com/djtooivoj/image/upload/v1743655116/Logo-Sepatu-22_lzhlxu.jpg"
               alt=""
             />
           </motion.div>
