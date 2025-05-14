@@ -72,6 +72,13 @@ export default function DiscountUser() {
     fetchData();
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    // Điều chỉnh múi giờ
+    date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
+    return date.toISOString().split("T")[0];
+  };
+
   if (!coupons || loading) return <Loading />;
   return (
     <div className="p-6">
@@ -213,11 +220,33 @@ export default function DiscountUser() {
                   }).format(coupon.minimum_price)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {new Date(coupon.valid_from).toISOString().split("T")[0]} -{" "}
-                  {new Date(coupon.valid_to).toISOString().split("T")[0]}
+                  {new Date(coupon.valid_from)
+                    .toLocaleDateString("vi-VN", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      timeZone: "Asia/Ho_Chi_Minh",
+                    })
+                    .split("/")
+                    .reverse()
+                    .join("-")}{" "}
+                  -{" "}
+                  {new Date(coupon.valid_to)
+                    .toLocaleDateString("vi-VN", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      timeZone: "Asia/Ho_Chi_Minh",
+                    })
+                    .split("/")
+                    .reverse()
+                    .join("-")}
                   <br />
                   <span className="text-sm text-gray-500">
-                    ({calculateDaysLeft(coupon.valid_to)} ngày còn lại)
+                    (
+                    {coupon.days_remaining ||
+                      calculateDaysLeft(coupon.valid_to)}{" "}
+                    ngày còn lại)
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
