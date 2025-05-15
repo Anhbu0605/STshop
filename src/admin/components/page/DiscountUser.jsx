@@ -53,6 +53,14 @@ export default function DiscountUser() {
     return diffDays > 0 ? diffDays : 0;
   };
 
+  const calculateStartDays = (validFrom) => {
+    const today = new Date();
+    const startDate = new Date(validFrom);
+    const diffTime = startDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
+
   const handleDelete = async (id) => {
     if (!confirm("Bạn có chắc chắn muốn xóa mã giảm giá này không?")) return;
     const res = await deleteDiscountUser(id);
@@ -243,10 +251,16 @@ export default function DiscountUser() {
                     .join("-")}
                   <br />
                   <span className="text-sm text-gray-500">
-                    (
-                    {coupon.days_remaining ||
-                      calculateDaysLeft(coupon.valid_to)}{" "}
-                    ngày còn lại)
+                    {coupon.message.toLowerCase().includes("chờ bắt đầu") ? (
+                      <>Còn {calculateStartDays(coupon.valid_from)} ngày nữa</>
+                    ) : (
+                      <>
+                        (
+                        {coupon.days_remaining ||
+                          calculateDaysLeft(coupon.valid_to)}{" "}
+                        ngày còn lại)
+                      </>
+                    )}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
