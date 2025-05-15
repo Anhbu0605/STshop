@@ -87,6 +87,17 @@ export default function DiscountUser() {
     return date.toISOString().split("T")[0];
   };
 
+  const checkCouponStatus = (coupon) => {
+    const today = new Date();
+    const validFrom = new Date(coupon.valid_from);
+    const validTo = new Date(coupon.valid_to);
+
+    if (!coupon.status) return "tạm dừng";
+    if (today < validFrom) return "chờ bắt đầu";
+    if (today > validTo) return "hết hạn";
+    return "đang hoạt động";
+  };
+
   if (!coupons || loading) return <Loading />;
   return (
     <div className="p-6">
@@ -193,112 +204,125 @@ export default function DiscountUser() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {coupons.map((coupon, index) => (
-              <tr key={coupon.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap cursor-pointer hover:text-blue-500">
-                  <span
-                    onClick={() => {
-                      toast.dismiss();
-                      navigator.clipboard
-                        .writeText(coupon.code)
-                        .then(() => {
-                          toast.success("Đã copy mã giảm giá");
-                        })
-                        .catch(() => {
-                          toast.error("Lỗi copy mã giảm giá");
-                        });
-                    }}
-                  >
-                    {coupon.code}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{coupon.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{coupon.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {coupon.description}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {coupon.discount_percent}%
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {new Intl.NumberFormat("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                  }).format(coupon.minimum_price)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {new Date(coupon.valid_from)
-                    .toLocaleDateString("vi-VN", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      timeZone: "Asia/Ho_Chi_Minh",
-                    })
-                    .split("/")
-                    .reverse()
-                    .join("-")}{" "}
-                  -{" "}
-                  {new Date(coupon.valid_to)
-                    .toLocaleDateString("vi-VN", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      timeZone: "Asia/Ho_Chi_Minh",
-                    })
-                    .split("/")
-                    .reverse()
-                    .join("-")}
-                  <br />
-                  <span className="text-sm text-gray-500">
-                    {coupon.message.toLowerCase().includes("chờ bắt đầu") ? (
-                      <>Còn {calculateStartDays(coupon.valid_from)} ngày nữa</>
-                    ) : (
-                      <>
-                        (
-                        {coupon.days_remaining ||
-                          calculateDaysLeft(coupon.valid_to)}{" "}
-                        ngày còn lại)
-                      </>
-                    )}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      coupon.message.toLowerCase().includes("hết hạn")
-                        ? "bg-red-100 text-red-800"
-                        : coupon.message.toLowerCase().includes("tạm dừng")
-                        ? "bg-yellow-100 text-yellow-800"
-                        : coupon.message.toLowerCase().includes("chờ bắt đầu")
-                        ? "bg-gray-100 text-gray-800"
-                        : "bg-green-100 text-green-800"
-                    }`}
-                  >
-                    {coupon.message}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex gap-3">
-                    <button
-                      className="text-blue-500 hover:text-blue-500"
+            {coupons.map((coupon, index) => {
+              const couponStatus = checkCouponStatus(coupon);
+              return (
+                <tr key={coupon.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap cursor-pointer hover:text-blue-500">
+                    <span
                       onClick={() => {
-                        setEditData(coupon);
-                        setIsOpen(true);
+                        toast.dismiss();
+                        navigator.clipboard
+                          .writeText(coupon.code)
+                          .then(() => {
+                            toast.success("Đã copy mã giảm giá");
+                          })
+                          .catch(() => {
+                            toast.error("Lỗi copy mã giảm giá");
+                          });
                       }}
                     >
-                      <FaEdit />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(coupon.id)}
-                      className="text-red-600 hover:text-red-800"
+                      {coupon.code}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {coupon.email}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{coupon.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {coupon.description}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {coupon.discount_percent}%
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(coupon.minimum_price)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {new Date(coupon.valid_from)
+                      .toLocaleDateString("vi-VN", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        timeZone: "Asia/Ho_Chi_Minh",
+                      })
+                      .split("/")
+                      .reverse()
+                      .join("-")}{" "}
+                    -{" "}
+                    {new Date(coupon.valid_to)
+                      .toLocaleDateString("vi-VN", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        timeZone: "Asia/Ho_Chi_Minh",
+                      })
+                      .split("/")
+                      .reverse()
+                      .join("-")}
+                    <br />
+                    <span className="text-sm text-gray-500">
+                      {couponStatus === "chờ bắt đầu" ? (
+                        <>
+                          Còn {calculateStartDays(coupon.valid_from)} ngày nữa
+                        </>
+                      ) : couponStatus === "đang hoạt động" ? (
+                        <>
+                          (
+                          {coupon.days_remaining ||
+                            calculateDaysLeft(coupon.valid_to)}{" "}
+                          ngày còn lại)
+                        </>
+                      ) : null}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        couponStatus === "hết hạn"
+                          ? "bg-red-100 text-red-800"
+                          : couponStatus === "tạm dừng"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : couponStatus === "chờ bắt đầu"
+                          ? "bg-gray-100 text-gray-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
                     >
-                      <FaTrash />
-                    </button>
-                  </div>{" "}
-                </td>
-              </tr>
-            ))}
+                      {couponStatus === "hết hạn"
+                        ? "Hết hạn"
+                        : couponStatus === "tạm dừng"
+                        ? "Tạm dừng"
+                        : couponStatus === "chờ bắt đầu"
+                        ? "Chờ bắt đầu"
+                        : "Đang hoạt động"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex gap-3">
+                      <button
+                        className="text-blue-500 hover:text-blue-500"
+                        onClick={() => {
+                          setEditData(coupon);
+                          setIsOpen(true);
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(coupon.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>{" "}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
