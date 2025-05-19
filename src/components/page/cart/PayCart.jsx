@@ -226,10 +226,7 @@ const PayCart = ({ items }) => {
         <button
           onClick={handleCheckout}
           className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-500 transition-colors disabled:bg-gray-400"
-          disabled={
-            !deliveryDetails.selectedPaymentMethod ||
-            !deliveryDetails.selectedAddress
-          }
+          disabled={!deliveryDetails.selectedPaymentMethod}
         >
           Xác Nhận
         </button>

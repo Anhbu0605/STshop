@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -7,11 +7,19 @@ import { Link } from "react-router-dom";
 import Nav from "../header/Nav";
 import PageFooter from "../footer/PageFooter";
 import { deleteFavorite, renderFavorite } from "../../service/favorite_api";
+import { addCart } from "../../service/cart_client";
+import { getDetailProduct } from "../../redux/middlewares/client/detailProduct";
 
 export default function Favorite() {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const profile = useSelector((state) => state.profile.profile);
+  const dispatch = useDispatch();
+  const apiKey = useSelector((state) => state.login.apikey);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
 
   const fetchFavorites = async () => {
     try {
@@ -39,6 +47,32 @@ export default function Favorite() {
       fetchFavorites();
     } else {
       toast.error("Không thể xóa sản phẩm yêu thích");
+    }
+  };
+
+  const handleAddToCart = async (product, size, color) => {
+    toast.dismiss();
+    const result = await addCart(apiKey, {
+      id: product.id,
+      size: size || "",
+      color: color || "",
+    });
+    if (result.ok) {
+      toast.success(result.message);
+      setShowModal(false);
+    } else {
+      toast.error(result.message);
+    }
+  };
+
+  const handleOpenModal = async (productId) => {
+    setSelectedSize("");
+    setSelectedColor("");
+    setShowModal(true);
+    // Lấy chi tiết sản phẩm từ API detail
+    const data = await dispatch(getDetailProduct(productId, 1));
+    if (data && data.data) {
+      setSelectedProduct(data.data);
     }
   };
 
@@ -129,12 +163,66 @@ export default function Favorite() {
                     Đã thêm vào yêu thích:{" "}
                     {new Date(item.created_at).toLocaleDateString("vi-VN")}
                   </div>
+
+                  <button
+                    className="mt-2 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    onClick={() => handleOpenModal(item.product.id)}
+                  >
+                    Thêm vào giỏ hàng
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         )}
       </main>
+
+      {showModal && selectedProduct && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white rounded-lg p-6 w-80 relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowModal(false)}
+            >
+              &times;
+            </button>
+            <h2 className="text-lg font-semibold mb-4">Chọn kích thước và màu sắc</h2>
+            <div className="mb-4">
+              <label className="block mb-1 font-medium">Kích thước:</label>
+              <select
+                className="w-full border rounded px-2 py-1"
+                value={selectedSize}
+                onChange={e => setSelectedSize(e.target.value)}
+              >
+                <option value="">Chọn size</option>
+                {selectedProduct.size && selectedProduct.size.split(',').map(size => (
+                  <option key={size.trim()} value={size.trim()}>{size.trim()}</option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block mb-1 font-medium">Màu sắc:</label>
+              <select
+                className="w-full border rounded px-2 py-1"
+                value={selectedColor}
+                onChange={e => setSelectedColor(e.target.value)}
+              >
+                <option value="">Chọn màu</option>
+                {selectedProduct.type && selectedProduct.type.split(',').map(color => (
+                  <option key={color.trim()} value={color.trim()}>{color.trim()}</option>
+                ))}
+              </select>
+            </div>
+            <button
+              className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-colors"
+              disabled={!selectedSize || !selectedColor}
+              onClick={() => handleAddToCart(selectedProduct, selectedSize, selectedColor)}
+            >
+              Xác nhận thêm vào giỏ hàng
+            </button>
+          </div>
+        </div>
+      )}
 
       <PageFooter />
     </div>
