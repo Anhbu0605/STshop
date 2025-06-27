@@ -12,12 +12,13 @@ export default function SupportChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [lastFetchTime, setLastFetchTime] = useState(0);
+  const [fetching, setFetching] = useState(false);
   const statusLogin = useSelector((state) => state.login.status);
   const apiKey = useSelector((state) => state.login.apikey);
   const [inputMessage, setInputMessage] = useState("");
   const messagesEndRef = useRef(null);
   const intervalRef = useRef(null);
+  const lastFetchTime = useRef(0);
   const [notification, setNotification] = useState(0);
 
   const scrollToBottom = useCallback(() => {
@@ -36,17 +37,25 @@ export default function SupportChat() {
   const fetchData = useCallback(async (force = false) => {
     if (!statusLogin || !apiKey) return;
 
-    // Throttle API calls - chỉ gọi nếu đã qua 2 giây từ lần gọi trước
+    // Prevent concurrent calls
+    if (fetching && !force) {
+      console.log('Chat fetch already in progress, skipping...');
+      return;
+    }
+
+    // Throttle API calls - minimum 3 seconds between calls
     const now = Date.now();
-    if (!force && now - lastFetchTime < 2000) return;
+    if (!force && now - lastFetchTime.current < 3000) {
+      console.log('Chat API call throttled');
+      return;
+    }
 
-    if (loading) return; // Prevent concurrent calls
-
-    setLoading(true);
-    setLastFetchTime(now);
+    setFetching(true);
+    lastFetchTime.current = now;
 
     try {
-      const data = await apiService.getChatMessages(apiKey, force ? { forceRefresh: true } : {});
+      console.log('Fetching chat messages...', force ? '(forced)' : '');
+      const data = await getSupportChat(apiKey);
 
       setNotification(data.unread_count || 0);
       if (data.ok && data.data) {
@@ -58,6 +67,7 @@ export default function SupportChat() {
         // Chỉ update nếu có thay đổi
         setMessages(prevMessages => {
           if (JSON.stringify(prevMessages) !== JSON.stringify(sortedMessages)) {
+            console.log('Chat messages updated');
             setTimeout(scrollToBottom, 100);
             return sortedMessages;
           }
@@ -67,9 +77,9 @@ export default function SupportChat() {
     } catch (error) {
       console.error("Error fetching chat data:", error);
     } finally {
-      setLoading(false);
+      setFetching(false);
     }
-  }, [statusLogin, apiKey, loading, lastFetchTime, scrollToBottom]);
+  }, [statusLogin, apiKey, fetching, scrollToBottom]);
 
   // Gửi tin nhắn với optimistic update
   const handleSendMessage = useCallback(async () => {
@@ -111,15 +121,18 @@ export default function SupportChat() {
   // Setup interval chỉ khi chat được mở và user đã login
   useEffect(() => {
     if (statusLogin && isOpen) {
+      console.log('Chat opened, starting fetch cycle');
+
       // Fetch ngay lập tức khi mở chat
       fetchData(true);
 
       // Setup interval với thời gian dài hơn
       intervalRef.current = setInterval(() => {
-        fetchData();
-      }, 5000); // Tăng từ 3s lên 5s
+        fetchData(false);
+      }, 8000); // Tăng lên 8 giây để giảm tải
 
       return () => {
+        console.log('Chat closed, clearing interval');
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
@@ -128,11 +141,12 @@ export default function SupportChat() {
     } else {
       // Clear interval khi đóng chat hoặc logout
       if (intervalRef.current) {
+        console.log('Clearing chat interval (not open or not logged in)');
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     }
-  }, [statusLogin, isOpen, fetchData]);
+  }, [statusLogin, isOpen]); // Remove fetchData from dependencies
 
   // Cleanup khi component unmount
   useEffect(() => {

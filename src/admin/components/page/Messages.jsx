@@ -5,7 +5,7 @@ import {
   getChatAdminRender,
   sendMessageAdmin,
 } from "../../../service/server/messger_admin";
-import { apiService } from "../../../service/apiService";
+import { apiMonitor } from "../../../utils/apiMonitor";
 import Cookies from "js-cookie";
 
 const ChatMessages = () => {
@@ -14,36 +14,49 @@ const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [messagesCache, setMessagesCache] = useState(new Map());
+  const [fetchingMessages, setFetchingMessages] = useState(false);
+  const messagesCache = useRef(new Map());
   const intervalRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const lastFetchTime = useRef(0);
   const apiKey = Cookies.get("admin_apikey");
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  // Cache messages để tránh gọi API không cần thiết
-  const getCachedMessages = useCallback((userId) => {
-    return messagesCache.get(userId) || [];
-  }, [messagesCache]);
-
-  const setCachedMessages = useCallback((userId, messages) => {
-    setMessagesCache(prev => new Map(prev.set(userId, messages)));
+  // Throttle function để tránh gọi API quá nhanh
+  const throttleApiCall = useCallback((func, delay = 2000) => {
+    const now = Date.now();
+    if (now - lastFetchTime.current < delay) {
+      console.log('API call throttled, too soon since last call');
+      return Promise.resolve(null);
+    }
+    lastFetchTime.current = now;
+    return func();
   }, []);
 
-  // Fetch users chỉ 1 lần khi component mount với caching
+  // Fetch users chỉ 1 lần khi component mount
   useEffect(() => {
     let isMounted = true;
 
     const fetchUsers = async () => {
-      if (loading) return; // Prevent multiple calls
+      if (loading) return;
 
       setLoading(true);
       try {
-        const data = await apiService.getChatAdminUsers();
-        if (isMounted && data.data) {
-          setUsers(data.data.users);
+        // Track API call
+        if (!apiMonitor.shouldAllowCall('/message_admin', 'GET')) {
+          console.warn('Users API call blocked by monitor');
+          return;
+        }
+
+        apiMonitor.trackCall('/message_admin', 'GET');
+        console.log('Fetching users list...');
+        const { data } = await getChatAdminRender();
+        if (isMounted && data) {
+          setUsers(data.users);
+          console.log('Users loaded:', data.users.length);
         }
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -61,77 +74,110 @@ const ChatMessages = () => {
     };
   }, []); // Chỉ chạy 1 lần khi mount
 
-  // Fetch messages khi chọn user mới - FIXED: Remove dependencies causing re-renders
+  // Fetch messages khi chọn user mới - COMPLETELY REWRITTEN
   useEffect(() => {
+    // Clear interval và reset state khi không có user
     if (!selectedUser) {
-      // Clear interval khi không có user được chọn
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
       setMessages([]);
+      setFetchingMessages(false);
       return;
     }
 
     let isMounted = true;
-    let fetchInProgress = false; // Prevent concurrent fetches
 
-    const fetchMessages = async (forceRefresh = false) => {
-      if (fetchInProgress) {
-        console.log('Fetch already in progress, skipping...');
+    // Function để fetch messages với proper throttling
+    const fetchMessages = async (isInitial = false) => {
+      // Prevent concurrent calls
+      if (fetchingMessages && !isInitial) {
+        console.log('Already fetching messages, skipping...');
         return;
       }
 
-      fetchInProgress = true;
+      // Throttle API calls (minimum 3 seconds between calls)
+      if (!isInitial) {
+        const endpoint = `/detail_message_user/${selectedUser.id}`;
 
-      try {
-        // Kiểm tra cache trước nếu không force refresh
-        if (!forceRefresh) {
-          const cachedMessages = messagesCache.get(selectedUser.id);
-          if (cachedMessages && cachedMessages.length > 0) {
-            console.log('Using cached messages for user:', selectedUser.id);
-            setMessages(cachedMessages);
-            setTimeout(() => {
-              messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            }, 100);
-            fetchInProgress = false;
-            return;
-          }
+        // Check with API monitor
+        if (!apiMonitor.shouldAllowCall(endpoint, 'GET')) {
+          console.log('Messages API call blocked by monitor');
+          return;
         }
 
-        console.log('Fetching messages for user:', selectedUser.id, forceRefresh ? '(force refresh)' : '');
+        const result = await throttleApiCall(async () => {
+          apiMonitor.trackCall(endpoint, 'GET');
+          return getChatAdminDetail(selectedUser.id);
+        }, 3000);
 
-        // Fetch messages mới
+        if (!result) return; // Throttled
+
+        if (isMounted && result.data) {
+          const newMessages = result.data.messages;
+          // Only update if messages actually changed
+          setMessages(prevMessages => {
+            if (JSON.stringify(prevMessages) !== JSON.stringify(newMessages)) {
+              console.log('Messages updated for user:', selectedUser.id);
+              messagesCache.current.set(selectedUser.id, newMessages);
+              setTimeout(scrollToBottom, 100);
+              return newMessages;
+            }
+            return prevMessages;
+          });
+        }
+        return;
+      }
+
+      // Initial fetch
+      setFetchingMessages(true);
+
+      try {
+        // Check cache first
+        const cached = messagesCache.current.get(selectedUser.id);
+        if (cached && cached.length > 0) {
+          console.log('Using cached messages for user:', selectedUser.id);
+          setMessages(cached);
+          setTimeout(scrollToBottom, 100);
+          setFetchingMessages(false);
+          return;
+        }
+
+        console.log('Initial fetch for user:', selectedUser.id);
+        const endpoint = `/detail_message_user/${selectedUser.id}`;
+        apiMonitor.trackCall(endpoint, 'GET');
         const data = await getChatAdminDetail(selectedUser.id);
 
         if (isMounted && data.data) {
           setMessages(data.data.messages);
-          setMessagesCache(prev => new Map(prev.set(selectedUser.id, data.data.messages)));
-          setTimeout(() => {
-            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-          }, 100);
+          messagesCache.current.set(selectedUser.id, data.data.messages);
+          setTimeout(scrollToBottom, 100);
         }
       } catch (error) {
         console.error("Error fetching messages:", error);
       } finally {
-        fetchInProgress = false;
+        if (isMounted) {
+          setFetchingMessages(false);
+        }
       }
     };
 
-    // Clear interval cũ trước khi tạo mới
+    // Clear any existing interval
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
 
-    // Fetch messages ngay lập tức
-    fetchMessages(false);
+    // Initial fetch
+    fetchMessages(true);
 
-    // Tạo interval mới với thời gian dài hơn để giảm tải
+    // Set up polling interval (longer interval to reduce load)
     intervalRef.current = setInterval(() => {
-      if (!isMounted || !selectedUser) return;
-      fetchMessages(true); // Force refresh trong interval
-    }, 8000); // Tăng lên 8 giây để giảm tải hơn nữa
+      if (isMounted && selectedUser) {
+        fetchMessages(false);
+      }
+    }, 10000); // 10 seconds interval
 
     return () => {
       isMounted = false;
@@ -140,7 +186,7 @@ const ChatMessages = () => {
         intervalRef.current = null;
       }
     };
-  }, [selectedUser?.id]); // CHỈ depend vào selectedUser.id
+  }, [selectedUser?.id, throttleApiCall, scrollToBottom]); // Minimal dependencies
 
   // Auto scroll khi có tin nhắn mới
   useEffect(() => {
@@ -202,11 +248,23 @@ const ChatMessages = () => {
     );
   }, []);
 
-  // Memoized user selection handler
+  // Memoized user selection handler với debouncing
   const handleUserSelect = useCallback((user) => {
-    if (selectedUser?.id === user.id) return; // Prevent unnecessary re-selection
+    if (selectedUser?.id === user.id) {
+      console.log('Same user selected, ignoring...');
+      return;
+    }
+
+    console.log('Selecting user:', user.id, user.username);
+
+    // Clear any pending operations
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     setSelectedUser(user);
-  }, [selectedUser]);
+  }, [selectedUser?.id]); // Only depend on ID
   return (
     <div className="flex h-full bg-gray-100">
       {/* User list */}
